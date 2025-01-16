@@ -1,0 +1,138 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #e0f7fa; /* Fondo celeste */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+.contenedor {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px; /* Espacio entre el formulario y la vista previa */
+}
+
+.formulario-contenedor form {
+    background-color: #b2ebf2;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 300px; /* Ancho fijo para el formulario */
+}
+
+input[type="text"], input[type="number"], input[type="file"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #cfd8dc;
+    display: block;
+}
+
+button {
+    background-color: #4dd0e1;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #26c6da;
+}
+
+h2 {
+    color: #006064;
+    text-align: center;
+}
+
+.image-preview {
+    width: 300px; /* Hacemos que la vista previa tenga el mismo ancho que el formulario */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Previene que la imagen sobrepase el contenedor */
+    border-radius: 8px; /* Opcional: para mantener consistencia con el estilo del formulario */
+}
+
+.image-preview img {
+    width: 100%; /* Hace que la imagen se ajuste al contenedor */
+    height: auto; /* Mantiene la proporción de la imagen */
+}
+
+/* Estilos compartidos */
+body {
+    font-family: 'calibri';
+    background-color: #f8f8f8;
+  }
+
+  .form-container {
+    width: 400px;
+    background: #243032;
+    padding: 30px;
+    margin: auto;
+    margin-top: 100px;
+    border-radius: 4px;
+    color: white;
+    box-shadow: 7px 13px 37px #0bcbec;
+    background-image: url('imagenes/fondo3circular.avif');
+    background-repeat: no-repeat;
+    background-size: 100% 115%;
+  }
+
+  .form-container h4 {
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+
+  .controls {
+    width: 100%;
+    background: #f8f8f8;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    border: 1px solid #0bcbec;
+    font-size: 18px;
+  }
+
+  .form-container p {
+    height: 40px;
+    text-align: center;
+    font-size: 18px;
+    line-height: 40px;
+  }
+
+  .form-container a:hover {
+    color: white;
+    text-decoration: underline;
+  }
+
+  .botons {
+    display: inline-block;
+    width: 100%;
+    margin-top: 0px;
+    background: #0bcbec;
+    border: none;
+    padding: 16px;
+    color: white;
+    font-size: 18px;
+    text-decoration: none;
+    text-align: center;
+  }
+
+  .botons:hover {
+    background-color: rgb(10, 48, 173);
+    text-decoration: none;
+  }
+
+  /* Estilos específicos para el formulario de registro */
+  #registro-form {
+    display: none; /* Ocultar el formulario de registro inicialmente */
+  }

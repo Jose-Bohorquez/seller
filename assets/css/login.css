@@ -1,0 +1,69 @@
+ /* Estilos compartidos */
+ body {
+    font-family: 'calibri';
+    background-color: #f8f8f8;
+  }
+
+  .form-container {
+    width: 400px;
+    background: #243032;
+    padding: 30px;
+    margin: auto;
+    margin-top: 100px;
+    border-radius: 4px;
+    color: white;
+    box-shadow: 7px 13px 37px #0bcbec;
+    background-image: url('imagenes/fondo3circular.avif');
+    background-repeat: no-repeat;
+    background-size: 100% 115%;
+  }
+
+  .form-container h4 {
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+
+  .controls {
+    width: 100%;
+    background: #f8f8f8;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    border: 1px solid #0bcbec;
+    font-size: 18px;
+  }
+
+  .form-container p {
+    height: 40px;
+    text-align: center;
+    font-size: 18px;
+    line-height: 40px;
+  }
+
+  .form-container a:hover {
+    color: white;
+    text-decoration: underline;
+  }
+
+  .botons {
+    display: inline-block;
+    width: 100%;
+    margin-top: 0px;
+    background: #0bcbec;
+    border: none;
+    padding: 16px;
+    color: white;
+    font-size: 18px;
+    text-decoration: none;
+    text-align: center;
+  }
+
+  .botons:hover {
+    background-color: rgb(10, 48, 173);
+    text-decoration: none;
+  }
+
+  /* Estilos específicos para el formulario de registro */
+  #registro-form {
+    display: none; /* Ocultar el formulario de registro inicialmente */
+  }

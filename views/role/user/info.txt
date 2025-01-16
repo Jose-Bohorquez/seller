@@ -1,0 +1,1 @@
+vista encargada de mostrar perfil al usuario, compras pendientes, compras realizadas
