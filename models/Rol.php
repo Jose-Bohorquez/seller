@@ -71,7 +71,7 @@
 		public function rol_create()
 		{
 			try {
-				$sql = 'INSERT INTO ROL VALUES (:id_rol, :name)';
+				$sql = 'INSERT INTO rol VALUES (:id_rol, :name)';
 				$stmt = $this -> dbh -> prepare($sql);
 				$stmt -> bindValue('id_rol',$this -> get_id_rol());
 				$stmt -> bindValue('name',$this -> get_name());
@@ -128,7 +128,7 @@ public function get_rol_by_id($id_rol)
 		public function rol_update()
 		{
 			try {
-				$sql = 'UPDATE ROL SET
+				$sql = 'UPDATE rol SET
 							id_rol = :id_rol,
 							name = :name
 						WHERE id_rol = :id_rol ';
@@ -147,7 +147,7 @@ public function get_rol_by_id($id_rol)
 		public function rol_delete($id_rol)
 		{
 			try {
-				$sql = 'DELETE FROM ROL WHERE id_rol = :id_rol';
+				$sql = 'DELETE FROM rol WHERE id_rol = :id_rol';
 				$stmt = $this -> dbh -> prepare($sql);
 				$stmt -> bindValue('id_rol', $id_rol);
 				$stmt -> execute();

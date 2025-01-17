@@ -9,7 +9,7 @@ class DataBase {
         $port = "3306";
         $database = "seller";   // ajustar (nombre BD) en qa servidor de pruebas
         $username = "root";     // ajustar (usuario BD) en qa servidor de pruebas
-        $password = "";         // ajustar (Contraseña de BD) en qa servidor de pruebas
+        $password = "S3rv1t3l4dm1n//";         // ajustar (Contraseña de BD) en qa servidor de pruebas
 
         try {
             // Crear la conexión PDO

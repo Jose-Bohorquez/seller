@@ -219,7 +219,7 @@ if (isset($_POST['id'])) {
 
 <section>
     <br>
-    <h4 id="scrollspyHeading3">Productos</h4>
+    <h4 id="scrollspyHeading3"></h4>
     <div class="container">
         <div class="row g-4 justify-content-center">
             <?php

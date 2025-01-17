@@ -138,7 +138,7 @@
    public function user_create()
     {
         try {
-            $sql = 'INSERT INTO USER (name, lastname, id_number, cel, email, pass, rol) 
+            $sql = 'INSERT INTO user (name, lastname, id_number, cel, email, pass, rol) 
                     VALUES (:name, :lastname, :id_number, :cel, :email, :pass, :rol)';
             $stmt = $this->dbh->prepare($sql);
             $stmt->bindValue('name', $this->name);
@@ -161,7 +161,7 @@
 		{
 			try {
 				$userList = [];
-				$sql = 'SELECT * FROM USER';
+				$sql = 'SELECT * FROM user';
 				$stmt = $this -> dbh -> query($sql);
 				foreach ($stmt -> fetchAll() as $user) {
 					$userList[] = new User(
@@ -191,8 +191,8 @@ public function get_user_by_id($id_user)
 {
     try {
         $sql = 'SELECT u.*, r.name as role_name
-                FROM USER u
-                JOIN ROL r ON u.rol = r.id_rol
+                FROM user u
+                JOIN rol r ON u.rol = r.id_rol
                 WHERE id_user = :id_user';
         $stmt = $this->dbh->prepare($sql);
         $stmt->bindValue('id_user', $id_user);
@@ -224,7 +224,7 @@ public function get_user_by_id($id_user)
 		{
 			try {
 
-				$sql = 'UPDATE USER SET
+				$sql = 'UPDATE user SET
 							id_user 	= :id_user,
 							name 		= :name,
 							lastname 	= :lastname,
@@ -257,7 +257,7 @@ public function get_user_by_id($id_user)
 		public function user_delete($id_user)
 		{
 			try {
-				$sql = 'DELETE FROM USER WHERE id_user = :id_user';
+				$sql = 'DELETE FROM user WHERE id_user = :id_user';
 				$stmt = $this -> dbh -> prepare($sql);
 				$stmt -> bindValue('id_user', $id_user);
 				$stmt -> execute();
@@ -270,7 +270,7 @@ public function get_user_by_id($id_user)
 		public function get_user_by_email_and_password($email, $password)
 		{
 		    try {
-		        $sql = 'SELECT * FROM USER WHERE email = :email AND pass = :password';
+		        $sql = 'SELECT * FROM user WHERE email = :email AND pass = :password';
 		        $stmt = $this->dbh->prepare($sql);
 		        $stmt->bindValue('email', $email);
 		        $stmt->bindValue('password', $password);

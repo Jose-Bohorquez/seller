@@ -224,7 +224,6 @@
   </main>
 
   <script src="assets/plantilla/bootstrap_5.3.3/assets/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/js/carrusel.js"></script>
 </body>
 
 </html>

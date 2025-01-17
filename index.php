@@ -5,7 +5,7 @@ session_start();
 
 try {
     // Cargar la conexión con la base de datos
-    require_once "models/Database.php";
+    require_once "models/DataBase.php";
 
     // Helpers
     require_once "helpers/cart_helper.php";
