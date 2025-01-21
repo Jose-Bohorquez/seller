@@ -53,14 +53,14 @@
 							</ul>
 						</li>
 
-						<li>
+						<!-- <li>
 							<a href="#" class="nav-btn-submenu"><i class="fas fa-file-invoice-dollar fa-fw"></i> &nbsp; Reportes <i class="fas fa-chevron-down"></i></a>
 							<ul>
 								<li>
 									<a href="reservation-list.html"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; Mas</a>
 								</li>
 							</ul>
-						</li>
+						</li> -->
 
 
 					</ul>
