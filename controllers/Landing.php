@@ -55,6 +55,18 @@ class Landing
         // Añadimos las variables de productos para las vistas
         #require_once "views/landing/landing_view.php";
     }
+
+
+
+    public function mainv2()
+    {
+        require_once "views/landing/new_view.php"; // Aquí es donde cargamos la nueva vista
+    }
+    
+
+
+
+
 }
 
 
