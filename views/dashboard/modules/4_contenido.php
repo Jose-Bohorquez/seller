@@ -30,7 +30,7 @@
     </a>
 
     <!-- Productos Card -->
-    <a href="product-list.html" class="tile">
+    <a href="?c=Products&a=read_products" class="tile">
         <div class="tile-tittle">Productos</div>
         <div class="tile-icon">
             <i class="fas fa-box fa-fw"></i>
@@ -39,12 +39,12 @@
     </a>
 
     <!-- Reportes Card -->
-    <a href="reports.html" class="tile">
+    <!-- <a href="reports.html" class="tile">
         <div class="tile-tittle">Reportes</div>
         <div class="tile-icon">
             <i class="fas fa-clipboard-list fa-fw"></i>
             <p>0 Reportes Generados</p>
         </div>
-    </a>
+    </a> -->
     
 </div>
