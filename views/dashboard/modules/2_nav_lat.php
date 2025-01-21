@@ -48,7 +48,7 @@
 									<a href="item-new.html"><i class="fas fa-plus fa-fw"></i> &nbsp; Agregar Producto</a>
 								</li>
 								<li>
-									<a href="item-list.html"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; Lista de Productos</a>
+									<a href="?c=Products&a=read_products"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; Lista de Productos</a>
 								</li>
 							</ul>
 						</li>
