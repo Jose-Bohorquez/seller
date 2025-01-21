@@ -391,7 +391,7 @@ if (isset($_POST['id'])) {
 
 
 
-      <br>
+      <!-- <br>
       <h4 id="scrollspyHeading4"></h4>
       <br>
       <h1 class="text-center">Contacto</h1>
@@ -443,7 +443,7 @@ if (isset($_POST['id'])) {
             </div>
           </div>
         </div>
-      </section>
+      </section> -->
 
       <br>
       <h4 id="scrollspyHeading5"></h4>
