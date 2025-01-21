@@ -157,6 +157,30 @@
 
 
 
+
+	public function user_create_register_mdl()
+	{
+        try {
+            $sql = 'INSERT INTO user (name_user, lastname, id_number, cel, email, pass, rol) 
+                    VALUES (:name_user, :lastname, :id_number, :cel, :email, :pass, :rol)';
+            $stmt = $this->dbh->prepare($sql);
+            $stmt->bindValue('name_user', $this->name_user);
+            $stmt->bindValue('lastname', $this->lastname);
+            $stmt->bindValue('id_number', $this->id_number);
+            $stmt->bindValue('cel', $this->cel);
+            $stmt->bindValue('email', $this->email);
+            $stmt->bindValue('pass', $this->pass);
+            $stmt->bindValue('rol', $this->rol);
+            $stmt->execute();
+        } catch (Exception $e) {
+            throw new Exception("Error al crear usuario: " . $e->getMessage());
+        }
+	}
+	
+
+
+
+
 		public function user_read()
 		{
 			try {

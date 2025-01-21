@@ -20,12 +20,23 @@ try {
     $actionName = isset($_REQUEST['a']) ? $_REQUEST['a'] : $defaultAction;
 
     // Rutas protegidas (solo accesibles para usuarios autenticados)
-    $protectedRoutes = ['Dashboard', 'Users', 'Products'];
+    $protectedRoutes = [
+        'Dashboard' => [], // Todas las acciones protegidas
+        'Users' => ['create_user', 'read_user', 'update_user', 'delete_user'], // Acciones protegidas
+        'Products' => [] // Todas las acciones protegidas
+    ];
 
-    // Verificar si la ruta es protegida y si el usuario está autenticado
-    if (in_array($controllerName, $protectedRoutes) && !is_logged_in()) {
-        header("Location: ?c=Login"); // Redirigir al login si no está autenticado
-        exit();
+    // Verificar si la ruta es protegida
+    if (array_key_exists($controllerName, $protectedRoutes)) {
+        $protectedActions = $protectedRoutes[$controllerName];
+
+        // Si no hay acciones específicas protegidas, proteger todas las acciones
+        if (empty($protectedActions) || in_array($actionName, $protectedActions)) {
+            if (!is_logged_in()) {
+                header("Location: ?c=Login"); // Redirigir al login si no está autenticado
+                exit();
+            }
+        }
     }
 
     // Construir ruta del archivo del controlador
@@ -64,7 +75,7 @@ try {
     ob_end_flush();
 }
 
-
+// Configuración para mostrar errores
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);

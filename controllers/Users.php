@@ -71,6 +71,77 @@
                 }
             }
         }
+
+
+
+
+
+
+
+
+
+        public function create_user_register()
+        {
+            // if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            //     echo "<pre>";
+            //     print_r($_POST);
+            //     echo "</pre>";
+            //     exit;
+            // }
+            
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                try {
+                    // Validar datos del formulario
+                    if (
+                        empty($_POST['user_name']) ||
+                        empty($_POST['user_lastname']) ||
+                        empty($_POST['user_doc']) ||
+                        empty($_POST['user_cel']) ||
+                        empty($_POST['user_email']) ||
+                        empty($_POST['user_domain']) ||
+                        empty($_POST['user_pass'])
+                    ) {
+                        header("Location: ?c=Registry&m=missingFields");
+                        exit;
+                    }
+        
+                    // Concatenar email y dominio
+                    $email = trim($_POST['user_email']) . trim($_POST['user_domain']);
+        
+                    // Crear el objeto usuario
+                    $user = new User(
+                        null,
+                        trim($_POST['user_name']),
+                        trim($_POST['user_lastname']),
+                        trim($_POST['user_doc']),
+                        trim($_POST['user_cel']),
+                        $email,
+                        sha1(trim($_POST['user_pass'])), // Contraseña cifrada
+                        4 // Rol fijo para usuario
+                    );
+        
+                // echo "<pre>";
+                // print_r($user);
+                // echo "</pre>";
+                // exit;
+            
+
+                    // Registrar usuario
+                    $user->user_create_register_mdl();
+        
+                    // Redirigir a landing con éxito
+                    header("Location: ?c=Landing&m=registrationSuccess");
+                } catch (Exception $e) {
+                    // Mostrar el error exacto (solo para depuración, no en producción)
+                    echo "Error al registrar el usuario: " . $e->getMessage();
+                    exit;
+                }
+            }
+        }
+        
+        
+        
+
         
         
         

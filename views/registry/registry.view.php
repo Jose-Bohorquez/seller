@@ -201,8 +201,8 @@
       </a>
 
 
-      <form method="POST" action="?c=Users&a=create_user">
-    <h1 class="h3 mb-3 fw-normal">Registro Usuario</h1>
+      <form method="POST" action="?c=Users&a=create_user_register">
+      <h1 class="h3 mb-3 fw-normal">Registro Usuario</h1>
 
     <div class="form-floating pb-2">
         <input name="user_name" type="text" class="form-control" placeholder="Nombre" required>
@@ -225,24 +225,33 @@
     </div>
 
     <div class="form-floating pb-2 d-flex">
-        <input name="user_email" type="text" class="form-control me-1" placeholder="Correo" required>
-        <select name="user_domain" class="form-select">
-            <option value="@servitel.cc">@servitel.cc</option>
-            <option value="@servientrega.co">@servientrega.co</option>
-            <option value="@global.com">@global.com</option>
-        </select>
-    </div>
+    <input name="user_email" type="text" class="form-control me-1" placeholder="Correo" required>
+    <select name="user_domain" class="form-select">
+        <option value="@servitel.cc">@servitel.cc</option>
+        <option value="@servientrega.co">@servientrega.co</option>
+        <option value="@global.com">@global.com</option>
+    </select>
+</div>
+
 
     <div class="form-floating pb-2">
         <input name="user_pass" type="password" class="form-control" placeholder="Contraseña" required>
         <label>Ingrese su contraseña</label>
     </div>
 
-    <?php if (isset($_GET['m']) && $_GET['m'] === 'invalidDomain'): ?>
-        <div class="alert alert-danger">
-            <strong>Error:</strong> Dominio de correo no permitido.
-        </div>
-    <?php endif; ?>
+    <?php if (isset($_GET['m'])): ?>
+    <div class="alert alert-<?php echo $_GET['m'] === 'registrationSuccess' ? 'success' : 'danger'; ?>">
+        <?php if ($_GET['m'] === 'missingFields'): ?>
+            <strong>Error:</strong> Por favor, completa todos los campos.
+        <?php elseif ($_GET['m'] === 'registrationSuccess'): ?>
+            <strong>Éxito:</strong> Usuario registrado correctamente.
+        <?php elseif ($_GET['m'] === 'error'): ?>
+            <strong>Error:</strong> Ocurrió un problema al registrar el usuario.
+        <?php endif; ?>
+    </div>
+<?php endif; ?>
+
+
 
     <button class="btn btn-primary w-100 mb-2" type="submit">Registrar</button>
 
