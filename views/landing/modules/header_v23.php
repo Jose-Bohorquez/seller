@@ -210,7 +210,7 @@ if (isset($_POST['id'])) {
       data-bs-smooth-scroll="true" class="scrollspy-example bg-body-tertiary p-3 rounded-2" tabindex="0">
       <h4 id="scrollspyHeading1"></h4>
       <br>
-      <h1 class="text-center">Celulares</h1>
+      <h1 class="text-center">MAS PRODUCTOS</h1>
       <br>
 
 
@@ -308,7 +308,7 @@ if (isset($_POST['id'])) {
       <br>
       <h4 id="scrollspyHeading2"></h4>
       <br>
-      <h1 class="text-center">Computadores</h1>
+      <h1 class="text-center">MAS PRODUCTOS</h1>
       <br>
 
       <section>
@@ -352,7 +352,7 @@ if (isset($_POST['id'])) {
       <br>
       <h4 id="scrollspyHeading3"></h4>
       <br>
-      <h1 class="text-center">Equipos Usados</h1>
+      <h1 class="text-center">MAS PRODUCTOS</h1>
       <br>
       <section>
         <div class="container">
