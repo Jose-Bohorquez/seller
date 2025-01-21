@@ -14,86 +14,66 @@
         public function create_user()
         {
             if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-                // Cargar la vista del formulario de creación de usuario
-                require_once "models/Rol.php";
-
-                // Obtener roles para mostrar en la vista, si es necesario
-                $rol = new Rol();
-                $roles = $rol->rol_read();
-
-                require_once "views/dashboard/modules/1_header.php";
-                require_once "views/dashboard/modules/2_nav_lat.php";
-                require_once "views/dashboard/modules/3_nav_sup.php";
-                require_once "views/dashboard/pages/new_user.php"; // Vista para crear usuario
-                require_once "views/dashboard/modules/footer.php";
+                try {
+                    // Obtener roles
+                    require_once "models/Rol.php";
+                    $rol = new Rol();
+                    $roles = $rol->rol_read();
+        
+                    // Mostrar la vista de creación
+                    require_once "views/dashboard/modules/1_header.php";
+                    require_once "views/dashboard/modules/2_nav_lat.php";
+                    require_once "views/dashboard/modules/3_nav_sup.php";
+                    require_once "views/dashboard/pages/new_user.php";
+                    require_once "views/dashboard/modules/footer.php";
+                } catch (Exception $e) {
+                    die("Error al cargar la vista de creación: " . $e->getMessage());
+                }
             }
-
+        
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-                /*
-                echo "<pre>";
-                echo "POST Data (Array):\n";
-                foreach ($_POST as $key => $value) {
-                    echo "[$key]\t=> $value\n";
+                print_r(R_POST);
+                try {
+                    // Validar datos
+                    if (
+                        empty($_POST['user_name']) ||
+                        empty($_POST['user_lastname']) ||
+                        empty($_POST['user_doc']) ||
+                        empty($_POST['user_cel']) ||
+                        empty($_POST['user_email']) ||
+                        empty($_POST['user_pass']) ||
+                        empty($_POST['user_rol'])
+                    ) {
+                        header("Location: ?c=Users&a=create_user&m=missingFields");
+                        exit;
+                    }
+        
+                    // Crear usuario
+                    $user = new User(
+                        null,
+                        trim($_POST['user_name']),
+                        trim($_POST['user_lastname']),
+                        trim($_POST['user_doc']),
+                        trim($_POST['user_cel']),
+                        trim($_POST['user_email']),
+                        sha1(trim($_POST['user_pass'])), // Contraseña cifrada
+                        trim($_POST['user_rol'])
+                    );
+        
+                    #print_r($user);
+
+                    // Guardar en base de datos
+                    $user->user_create();
+                    header("Location: ?c=Users&a=read_user&m=success");
+                } catch (Exception $e) {
+                    header("Location: ?c=Users&a=create_user&m=error");
                 }
-                echo "</pre>";
-                */
-
-                // Validar y procesar los datos
-                $allowedDomains = ['@servitel.cc', '@servientrega.co', '@global.com'];
-                $email = trim($_POST['user_email']);
-                $selectedDomain = trim($_POST['user_domain']);
-
-                // Validar dominio
-                if (!in_array($selectedDomain, $allowedDomains)) {
-                    header("Location: ?c=Users&a=create_user&m=invalidDomain");
-                    exit;
-                }
-
-                $fullEmail = $email . $selectedDomain;
-
-                // Crear objeto User con rol fijo (4 = Usuario)
-                $user = new User(
-                    null,
-                    trim($_POST['user_name']),
-                    trim($_POST['user_lastname']),
-                    trim($_POST['user_doc']),
-                    trim($_POST['user_cel']),
-                    $fullEmail,
-                    sha1(trim($_POST['user_pass'])), // Contraseña cifrada
-                    4 // Rol fijo para usuarios normales
-                );
-
-        /*
-        echo "<pre>";
-        echo "User Object:\n";
-
-        // Convertir el objeto a un arreglo accesible
-        $userArray = (array) $user;
-
-        foreach ($userArray as $key => $value) {
-            // Si el valor es un objeto, indícalo, o conviértelo a string para mostrarlo
-            if (is_object($value)) {
-                echo "[$key]\t=> Object (" . get_class($value) . ")\n";
-            } elseif (is_array($value)) {
-                echo "[$key]\t=> Array (" . count($value) . " items)\n";
-            } else {
-                echo "[$key]\t=> $value\n";
             }
         }
-        echo "</pre>";
-        */
-
-
-                // Intentar guardar el usuario en la base de datos
-                try {
-                    $user->user_create();
-                    header("Location: ?c=Users&a=read_user&m=success"); // Redirigir a la lista de usuarios
-                } catch (Exception $e) {
-                    header("Location: ?c=Users&a=create_user&m=error"); // Redirigir en caso de error
-                }
-            } 
-        }
+        
+        
+        
 
 
 
@@ -123,82 +103,101 @@
 
 
 
+
         public function update_user()
-        {
-            if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-                try {
-                    // Cargar el usuario
-                    $user = new User();
-                    $user = $user->get_user_by_id($_GET['id_user']);
+{
+    if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+        try {
+            // Obtener los datos del usuario
+            $userModel = new User();
+            $user = $userModel->get_user_by_id($_GET['id_user']);
+            print_r($user);
+            // Obtener los roles
+            require_once "models/Rol.php";
+            $rolModel = new Rol();
+            $roles = $rolModel->rol_read();
 
-
-                    echo "<br><br><br><br><br><br>";
-                    echo "<pre>";
-                    echo "User Object:\n";
-            
-                    // Convertir el objeto a un arreglo accesible
-                    $userArray = (array) $user;
-            
-                    foreach ($userArray as $key => $value) {
-                        // Si el valor es un objeto, indícalo, o conviértelo a string para mostrarlo
-                        if (is_object($value)) {
-                            echo "[$key]\t=> Object (" . get_class($value) . ")\n";
-                        } elseif (is_array($value)) {
-                            echo "[$key]\t=> Array (" . count($value) . " items)\n";
-                        } else {
-                            echo "[$key]\t=> $value\n";
-                        }
-                    }
-                    echo "</pre>";                 
-
-
-
-                    // Cargar los roles
-                    require_once "models/Rol.php";
-                    $rol = new Rol();
-                    $roles = $rol->rol_read(); // Esto obtiene los roles de la tabla `rol`
-
-                    #var_dump($roles);
-                } catch (Exception $e) {
-                    die("Error al obtener datos: " . $e->getMessage());
-                }
-
-                // Cargar la vista con los datos
-                require_once "views/dashboard/modules/1_header.php";
-                require_once "views/dashboard/modules/2_nav_lat.php";
-                require_once "views/dashboard/modules/3_nav_sup.php";
-                require_once "views/dashboard/pages/update_user.php";
-                require_once "views/dashboard/modules/footer.php";
+            // Validar datos antes de enviarlos a la vista
+            if (!$user) {
+                die("El usuario no existe.");
+            }
+            if (empty($roles)) {
+                die("No se encontraron roles disponibles.");
             }
 
-            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                try {
-                    $currentUser = new User();
-                    $currentUser = $currentUser->get_user_by_id($_POST['id_user']);
-
-                    $newRole = trim($_POST['user_rol']);
-                    $roleToSave = !empty($newRole) && $newRole != $currentUser->get_rol()
-                        ? $newRole
-                        : $currentUser->get_rol();
-
-                    $user = new User(
-                        $_POST['id_user'],
-                        $_POST['user_name'],
-                        $_POST['user_lastname'],
-                        $_POST['user_doc'],
-                        $_POST['user_cel'],
-                        $_POST['user_email'],
-                        !empty(trim($_POST['user_pass'])) ? sha1(trim($_POST['user_pass'])) : $currentUser->get_pass(),
-                        $roleToSave
-                    );
-
-                    $user->user_update();
-                    header("Location: ?c=Users&a=read_user&m=success");
-                } catch (Exception $e) {
-                    die("Error al actualizar el usuario: " . $e->getMessage());
-                }
-            }
+            // Pasar los datos a la vista
+            require_once "views/dashboard/modules/1_header.php";
+            require_once "views/dashboard/modules/2_nav_lat.php";
+            require_once "views/dashboard/modules/3_nav_sup.php";
+            require_once "views/dashboard/pages/update_user.php";
+            require_once "views/dashboard/modules/footer.php";
+        } catch (Exception $e) {
+            die("Error al obtener los datos: " . $e->getMessage());
         }
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        try {
+            // Obtener el usuario actual desde la base de datos
+            $userModel = new User();
+            $currentUser = $userModel->get_user_by_id($_POST['id_user']);
+
+            if (!$currentUser) {
+                die("El usuario no existe.");
+            }
+
+            // Procesar los datos enviados
+            $newName = trim($_POST['user_name']);
+            $newLastname = trim($_POST['user_lastname']);
+            $newIdNumber = trim($_POST['user_doc']);
+            $newCel = trim($_POST['user_cel']);
+            $newEmail = trim($_POST['user_email']);
+            $newPass = !empty($_POST['user_pass']) ? sha1(trim($_POST['user_pass'])) : $currentUser->get_pass();
+            $newRole = !empty($_POST['user_rol']) ? $_POST['user_rol'] : $currentUser->get_rol();
+
+            // Crear un array para guardar los campos que han cambiado
+            $fieldsToUpdate = [];
+
+            // Comparar cada campo
+            if ($currentUser->get_name_user() !== $newName) {
+                $fieldsToUpdate['name_user'] = $newName;
+            }
+            if ($currentUser->get_lastname() !== $newLastname) {
+                $fieldsToUpdate['lastname'] = $newLastname;
+            }
+            if ($currentUser->get_id_number() !== $newIdNumber) {
+                $fieldsToUpdate['id_number'] = $newIdNumber;
+            }
+            if ($currentUser->get_cel() !== $newCel) {
+                $fieldsToUpdate['cel'] = $newCel;
+            }
+            if ($currentUser->get_email() !== $newEmail) {
+                $fieldsToUpdate['email'] = $newEmail;
+            }
+            if ($currentUser->get_pass() !== $newPass) {
+                $fieldsToUpdate['pass'] = $newPass;
+            }
+            if ($currentUser->get_rol() !== $newRole) {
+                $fieldsToUpdate['rol'] = $newRole;
+            }
+
+            // Si hay cambios, actualizamos en la base de datos
+            if (!empty($fieldsToUpdate)) {
+                $userModel->update_user_fields($fieldsToUpdate, $_POST['id_user']);
+            }
+
+            header("Location: ?c=Users&a=read_user&m=success"); // Redirigir al listado de usuarios
+        } catch (Exception $e) {
+            die("Error al actualizar el usuario: " . $e->getMessage());
+        }
+    }
+}
+
+        
+
+
+
+        
 
 
 

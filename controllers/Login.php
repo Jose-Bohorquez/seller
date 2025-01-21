@@ -21,7 +21,7 @@ class Login
                 // Crear la sesión con los datos del usuario
                 $_SESSION['user'] = [
                     'id' => $authenticatedUser->get_id_user(),
-                    'name' => $authenticatedUser->get_name(),
+                    'name' => $authenticatedUser->get_name_user(),
                     'lastname' => $authenticatedUser->get_lastname(),
                     'email' => $authenticatedUser->get_email(),
                     'role' => $authenticatedUser->get_rol(),

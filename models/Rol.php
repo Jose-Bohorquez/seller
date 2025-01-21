@@ -11,7 +11,7 @@
 		// Atributos
 		private $dbh; # variable de conexion data base handler
 		private $id_rol;
-		private $name;
+		private $name_rol;
 
 
 
@@ -34,10 +34,10 @@
 
 
         # constructor para 2 parametros (__construct2)
-        public function __construct2($id_rol,$name)
+        public function __construct2($id_rol,$name_rol)
         {
         	$this -> id_rol = $id_rol;
-        	$this -> name 	= $name;
+        	$this -> name_rol 	= $name_rol;
         }
 
 
@@ -52,14 +52,14 @@
 		}
 
 
-		# Metodos set() y get() name
-		public function set_name($name)
+		# Metodos set() y get() name_rol
+		public function set_name_rol($name_rol)
 		{
-			$this -> name = $name;
+			$this -> name_rol = $name_rol;
 		}
-		public function get_name()
+		public function get_name_rol()
 		{
-			return $this -> name;
+			return $this -> name_rol;
 		}
 
 
@@ -71,10 +71,10 @@
 		public function rol_create()
 		{
 			try {
-				$sql = 'INSERT INTO rol VALUES (:id_rol, :name)';
+				$sql = 'INSERT INTO rol VALUES (:id_rol, :name_rol)';
 				$stmt = $this -> dbh -> prepare($sql);
 				$stmt -> bindValue('id_rol',$this -> get_id_rol());
-				$stmt -> bindValue('name',$this -> get_name());
+				$stmt -> bindValue('name_rol',$this -> get_name_rol());
 				// Validamos
 				$stmt -> execute();
 			} catch (Exception $e) {
@@ -87,6 +87,7 @@
 		# caso de uso # 02 leer todos los usuarios
 public function rol_read()
 {
+	#echo "estas en la funcion leer roles de el modelo rol que se llama desde el controlador de usuarios";
     try {
         $rolList = [];
         $sql = 'SELECT * FROM rol'; // Asegúrate de que sea 'rol'
@@ -94,7 +95,7 @@ public function rol_read()
         foreach ($stmt->fetchAll() as $rol) {
             $rolList[] = new Rol(
                 $rol['id_rol'],
-                $rol['name']
+                $rol['name_rol']
             );
         }
         return $rolList;
@@ -115,7 +116,7 @@ public function get_rol_by_id($id_rol)
         $rolDb = $stmt->fetch();
         return new Rol(
             $rolDb['id_rol'],
-            $rolDb['name']
+            $rolDb['name_rol']
         );
     } catch (Exception $e) {
         die("Error al obtener el rol: " . $e->getMessage());
@@ -130,11 +131,11 @@ public function get_rol_by_id($id_rol)
 			try {
 				$sql = 'UPDATE rol SET
 							id_rol = :id_rol,
-							name = :name
+							name_rol = :name_rol
 						WHERE id_rol = :id_rol ';
 				$stmt = $this -> dbh -> prepare($sql);
 				$stmt -> bindValue('id_rol',$this -> get_id_rol());
-				$stmt -> bindValue('name',$this -> get_name());
+				$stmt -> bindValue('name_rol',$this -> get_name_rol());
 				$stmt -> execute();
 			} catch (Exception $e) {
 				die($e -> getMessage());				

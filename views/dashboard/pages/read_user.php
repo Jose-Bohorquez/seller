@@ -4,7 +4,7 @@
         <i class="fas fa-clipboard-list fa-fw"></i> &nbsp; LISTA DE USUARIOS
     </h3>
     <p class="text-justify">
-        vista dedicada a visualizar los usuario actuales en el sistema
+        Vista dedicada a visualizar los usuarios actuales en el sistema
     </p>
 </div>
 
@@ -14,51 +14,55 @@
             <a href="?c=Users&a=create_user"><i class="fas fa-plus fa-fw"></i> &nbsp; AGREGAR USUARIO</a>
         </li>
         <li>
-            <a class="active" href="?c=Users&a=read_user"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; LISTA DE
-                USUARIOS</a>
+            <a class="active" href="?c=Users&a=read_user"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; LISTA DE USUARIOS</a>
         </li>
     </ul>
 </div>
 
-<!-- Content here-->
+<!-- incluimos sweet alert2 -->
+<!-- SweetAlert2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+<!-- Content here -->
 <div class="container-fluid">
     <div class="table-responsive">
-        <table class="table table-dark table-sm">
+        <table id="usersTable" class="table table-dark table-sm fs-6">
             <thead>
                 <tr class="text-center roboto-medium">
-                    <th>ID USUARIO</th>
-                    <th>NOMBRES</th>
-                    <th>APELLIDOS</th>
-                    <th>N° DOCUMENTO</th>
-                    <th>TELEFONO</th>
-                    <th>CORREO</th>
-                    <th>CONTRASEÑA</th>
-                    <th>ROL </th>
-                    <th>ACTUALIZAR</th>
-                    <th>ELIMINAR</th>
+                    <th class="w-10">ID USUARIO</th>
+                    <th class="w-15">NOMBRES</th>
+                    <th class="w-15">APELLIDOS</th>
+                    <th class="w-15">N&deg; DOCUMENTO</th>
+                    <th class="w-10">TEL&Eacute;FONO</th>
+                    <th class="w-20">CORREO</th>
+                    <th class="w-15">CONTRASE&Ntilde;A</th>
+                    <th class="w-10">ROL</th>
+                    <th class="w-10">ACTUALIZAR</th>
+                    <th class="w-10">ELIMINAR</th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($users_all as $user) : ?>
+                <?php foreach ($users_all as $user): ?>
                 <tr class="text-center">
-                    <td><?php echo $user->get_id_user(); ?></td>
-                    <td><?php echo $user->get_name(); ?></td>
-                    <td><?php echo $user->get_lastname(); ?></td>
-                    <td><?php echo $user->get_id_number(); ?></td>
-                    <td><?php echo $user->get_cel(); ?></td>
-                    <td><?php echo $user->get_email(); ?></td> 
-                    <td><?php echo $user->get_pass(); ?></td> 
-                    <td><?php echo $user->get_rol(); ?></td> 
+                    <td class="text-truncate"><?php echo $user->get_id_user(); ?></td>
+                    <td class="text-truncate"><?php echo $user->get_name_user(); ?></td>
+                    <td class="text-truncate"><?php echo $user->get_lastname(); ?></td>
+                    <td class="text-truncate"><?php echo $user->get_id_number(); ?></td>
+                    <td class="text-truncate"><?php echo $user->get_cel(); ?></td>
+                    <td class="text-truncate"><?php echo $user->get_email(); ?></td>
+                    <td class="text-truncate"><?php echo $user->get_pass(); ?></td>
+                    <td class="text-truncate"><?php echo $user->get_rol(); ?></td>
                     <td>
-                        <a href="?c=Users&a=update_user&id_user=<?php echo $user->get_id_user(); ?>"
-                            class="btn btn-success">
+                        <a href="?c=Users&a=update_user&id_user=<?php echo $user->get_id_user(); ?>" class="btn btn-success btn-sm">
                             <i class="fas fa-sync-alt"></i>
                         </a>
                     </td>
                     <td>
-                        <!-- Botón de eliminación con SweetAlert -->
-                        <a href="javascript:void(0);" class="btn btn-danger"
-                            onclick="confirmDelete('<?php echo $user->get_id_user(); ?>')">
+                        <a href="javascript:void(0);" class="btn btn-danger btn-sm" onclick="confirmDelete(<?php echo $user->get_id_user(); ?>)">
                             <i class="far fa-trash-alt"></i>
                         </a>
                     </td>
@@ -69,51 +73,40 @@
             </tbody>
         </table>
     </div>
-    <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-center">
-            <li class="page-item disabled">
-                <a class="page-link" href="#" tabindex="-1">Previous</a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-                <a class="page-link" href="#">Next</a>
-            </li>
-        </ul>
-    </nav>
 </div>
 
 <script>
-    function confirmDelete(id_user) {
-        // Muestra un SweetAlert de confirmación inicial
+    function confirmDelete(userId) {
+        // Primera confirmación
         Swal.fire({
             title: '¿Estás seguro?',
-            text: "¡Este cambio no se puede deshacer!",
+            text: "Esta acción eliminará al usuario permanentemente.",
             icon: 'warning',
             showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
             confirmButtonText: 'Sí, eliminar',
-            cancelButtonText: 'Cancelar',
-            reverseButtons: true
+            cancelButtonText: 'Cancelar'
         }).then((result) => {
-            // Si el usuario confirma la primera vez, pide una segunda confirmación
             if (result.isConfirmed) {
+                // Segunda confirmación
                 Swal.fire({
-                    title: '¡En serio?',
-                    text: "¿Estás seguro de que deseas eliminar este rol?",
-                    icon: 'warning',
+                    title: 'Confirmación final',
+                    text: "¿Realmente deseas eliminar este usuario?",
+                    icon: 'question',
                     showCancelButton: true,
-                    confirmButtonText: 'Sí, definitivamente',
-                    cancelButtonText: 'Cancelar',
-                    reverseButtons: true
-                }).then((secondResult) => {
-                    // Si el usuario confirma la segunda vez, redirige a la URL de eliminación
-                    if (secondResult.isConfirmed) {
-                        // Redirigir a la URL de eliminación
-                        window.location.href = '?c=Users&a=delete_user&id_user=' + id_user;
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, eliminar definitivamente',
+                    cancelButtonText: 'No, cancelar'
+                }).then((finalResult) => {
+                    if (finalResult.isConfirmed) {
+                        // Redirigir al controlador para eliminar el usuario
+                        window.location.href = `?c=Users&a=delete_user&id_user=${userId}`;
                     }
                 });
             }
         });
     }
 </script>
+

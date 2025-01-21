@@ -18,10 +18,10 @@
             require_once "views/dashboard/modules/footer.php";
 
 
-            if (isset($_POST['rol_name']) && !empty(trim($_POST['rol_name']))) {
+            if (isset($_POST['create_new_rol']) && !empty($_POST['create_new_rol']) ) {
             $rol = new Rol(
                 null, 
-                $_POST['rol_name']   
+                $_POST['create_new_rol']   
             );            
             
             $rol->rol_create();
@@ -45,10 +45,10 @@
 public function update_rol() {
     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         // Verificar si el parámetro 'id_rol' existe en la URL
-        if (isset($_GET['id_rol'])) {
+        if (isset($_GET['id'])) {
             $rol = new Rol();
             // Obtener el rol actual de la base de datos usando el id
-            $rol = $rol->get_rol_by_id($_GET['id_rol']);
+            $rol = $rol->get_rol_by_id($_GET['id']);
             
             // Cargar las vistas
             require_once "views/dashboard/modules/1_header.php";
@@ -84,7 +84,7 @@ public function update_rol() {
 
         public function delete_rol(){
             $rol = new Rol;
-            $rol = $rol -> rol_delete($_GET['id_rol']);
+            $rol = $rol -> rol_delete($_GET['id']);
             header("location:?c=Roles&a=read_rol");
         }
     }

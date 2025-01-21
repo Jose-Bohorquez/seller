@@ -5,7 +5,7 @@
 
 		private $dbh; # variable de conexion data base handler
 		private $id_user;
-		private $name;	
+		private $name_user;	
 		private $lastname;
 		private $id_number;
 		private $cel;	
@@ -27,10 +27,10 @@
             }
         }
 
-        public function __construct8($id_user,$name,$lastname,$id_number,$cel,$email,$pass,$rol)
+        public function __construct8($id_user,$name_user,$lastname,$id_number,$cel,$email,$pass,$rol)
         {
         	$this -> id_user	 = $id_user;
-        	$this -> name		 = $name;
+        	$this -> name_user		 = $name_user;
         	$this -> lastname	 = $lastname;
         	$this -> id_number	 = $id_number;
         	$this -> cel		 = $cel;
@@ -57,14 +57,14 @@
 		}
 
 
-		# Metodos set() y get() name
-		public function set_name($name)
+		# Metodos set() y get() name_user
+		public function set_name_user($name_user)
 		{
-			$this -> name = $name;
+			$this -> name_user = $name_user;
 		}
-		public function get_name()
+		public function get_name_user()
 		{
-			return $this -> name;
+			return $this -> name_user;
 		}
 
 
@@ -138,10 +138,10 @@
    public function user_create()
     {
         try {
-            $sql = 'INSERT INTO user (name, lastname, id_number, cel, email, pass, rol) 
-                    VALUES (:name, :lastname, :id_number, :cel, :email, :pass, :rol)';
+            $sql = 'INSERT INTO user (name_user, lastname, id_number, cel, email, pass, rol) 
+                    VALUES (:name_user, :lastname, :id_number, :cel, :email, :pass, :rol)';
             $stmt = $this->dbh->prepare($sql);
-            $stmt->bindValue('name', $this->name);
+            $stmt->bindValue('name_user', $this->name_user);
             $stmt->bindValue('lastname', $this->lastname);
             $stmt->bindValue('id_number', $this->id_number);
             $stmt->bindValue('cel', $this->cel);
@@ -166,7 +166,7 @@
 				foreach ($stmt -> fetchAll() as $user) {
 					$userList[] = new User(
 						$user['id_user'],
-						$user['name'],
+						$user['name_user'],
 						$user['lastname'],
 						$user['id_number'],
 						$user['cel'],
@@ -187,34 +187,70 @@
 
 
 
-public function get_user_by_id($id_user)
-{
-    try {
-        $sql = 'SELECT u.*, r.name as role_name
-                FROM user u
-                JOIN rol r ON u.rol = r.id_rol
-                WHERE id_user = :id_user';
-        $stmt = $this->dbh->prepare($sql);
-        $stmt->bindValue('id_user', $id_user);
-        $stmt->execute();
-        $userDb = $stmt->fetch();
+		public function get_user_by_id($id_user)
+		{
+			try {
+				$sql = 'SELECT u.*, r.name_rol AS role_name
+						FROM user u
+						JOIN rol r ON u.rol = r.id_rol
+						WHERE id_user = :id_user';
 
-        if ($userDb) {
-            $this->id_user = $userDb['id_user'];
-            $this->name = $userDb['name'];
-            $this->lastname = $userDb['lastname'];
-            $this->id_number = $userDb['id_number'];
-            $this->cel = $userDb['cel'];
-            $this->email = $userDb['email'];
-            $this->pass = $userDb['pass'];
-            $this->rol = $userDb['rol'];
-            return $this;
-        }
-        return null;
-    } catch (Exception $e) {
-        throw new Exception("Error al obtener el usuario: " . $e->getMessage());
-    }
-}
+				$stmt = $this->dbh->prepare($sql);
+				$stmt->bindValue(':id_user', $id_user, PDO::PARAM_INT);
+				$stmt->execute();
+				$userDb = $stmt->fetch(PDO::FETCH_ASSOC);
+		
+				if ($userDb) {
+					// Crear y retornar un nuevo objeto User
+					return new User(
+						$userDb['id_user'],
+						$userDb['name_user'],
+						$userDb['lastname'],
+						$userDb['id_number'],
+						$userDb['cel'],
+						$userDb['email'],
+						$userDb['pass'],
+						$userDb['rol'] // ID del rol
+					);
+				}
+		
+				return null; // Si no se encontró el usuario
+			} catch (Exception $e) {
+				throw new Exception("Error al obtener el usuario: " . $e->getMessage());
+			}
+		}
+		
+
+
+
+
+
+		public function update_user_fields(array $fieldsToUpdate, $userId)
+		{
+			try {
+				// Crear la parte dinámica del query
+				$updateFields = [];
+				foreach ($fieldsToUpdate as $field => $value) {
+					$updateFields[] = "$field = :$field";
+				}
+		
+				$sql = 'UPDATE user SET ' . implode(', ', $updateFields) . ' WHERE id_user = :id_user';
+				$stmt = $this->dbh->prepare($sql);
+		
+				// Asignar valores a los campos
+				foreach ($fieldsToUpdate as $field => $value) {
+					$stmt->bindValue(":$field", $value);
+				}
+				$stmt->bindValue(':id_user', $userId);
+		
+				$stmt->execute();
+			} catch (Exception $e) {
+				throw new Exception("Error al actualizar usuario: " . $e->getMessage());
+			}
+		}
+		
+
+
 
 
 
@@ -223,34 +259,31 @@ public function get_user_by_id($id_user)
 		public function user_update()
 		{
 			try {
-
 				$sql = 'UPDATE user SET
-							id_user 	= :id_user,
-							name 		= :name,
-							lastname 	= :lastname,
-							id_number 	= :id_number,
-							cel 		= :cel,
-							email 		= :email,
-							pass 		= :pass,
-							rol 		= :rol
-
-						WHERE id_user 	= :id_user ';
-
-				$stmt = $this -> dbh -> prepare($sql);				
-				$stmt -> bindValue('id_user',$this -> get_id_user() );	
-				$stmt -> bindValue('name',$this -> get_name() );
-				$stmt -> bindValue('lastname',$this -> get_lastname() );
-				$stmt -> bindValue('id_number',$this -> get_id_number() );
-				$stmt -> bindValue('cel',$this -> get_cel() );
-				$stmt -> bindValue('email',$this -> get_email() );
-				$stmt -> bindValue('pass',$this -> get_pass() );
-				$stmt -> bindValue('rol',$this -> get_rol() );		
-				$stmt -> execute();
-				
+							name_user   = :name_user,
+							lastname    = :lastname,
+							id_number   = :id_number,
+							cel         = :cel,
+							email       = :email,
+							pass        = :pass,
+							rol         = :rol
+						WHERE id_user   = :id_user';
+		
+				$stmt = $this->dbh->prepare($sql);
+				$stmt->bindValue(':id_user', $this->get_id_user());
+				$stmt->bindValue(':name_user', $this->get_name_user());
+				$stmt->bindValue(':lastname', $this->get_lastname());
+				$stmt->bindValue(':id_number', $this->get_id_number());
+				$stmt->bindValue(':cel', $this->get_cel());
+				$stmt->bindValue(':email', $this->get_email());
+				$stmt->bindValue(':pass', $this->get_pass());
+				$stmt->bindValue(':rol', $this->get_rol());
+				$stmt->execute();
 			} catch (Exception $e) {
-				die($e -> getMessage());				
+				throw new Exception("Error al actualizar el usuario: " . $e->getMessage());
 			}
 		}
+		
 
 
 

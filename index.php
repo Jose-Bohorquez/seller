@@ -20,13 +20,13 @@ try {
     $actionName = isset($_REQUEST['a']) ? $_REQUEST['a'] : $defaultAction;
 
     // Rutas protegidas (solo accesibles para usuarios autenticados)
-    #$protectedRoutes = ['Dashboard', 'Users', 'Products'];
+    $protectedRoutes = ['Dashboard', 'Users', 'Products'];
 
     // Verificar si la ruta es protegida y si el usuario está autenticado
-    #if (in_array($controllerName, $protectedRoutes) && !is_logged_in()) {
-        #header("Location: ?c=Login"); // Redirigir al login si no está autenticado
-        #exit();
-    #}
+    if (in_array($controllerName, $protectedRoutes) && !is_logged_in()) {
+        header("Location: ?c=Login"); // Redirigir al login si no está autenticado
+        exit();
+    }
 
     // Construir ruta del archivo del controlador
     $controllerFile = "controllers/" . $controllerName . ".php";
@@ -63,5 +63,10 @@ try {
     // Finalizar el almacenamiento en búfer
     ob_end_flush();
 }
+
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 ?>
