@@ -324,34 +324,42 @@
 		}
 
 
+
+		
+
 		public function get_user_by_email_and_password($email, $password)
 		{
-		    try {
-		        $sql = 'SELECT * FROM user WHERE email = :email AND pass = :password';
-		        $stmt = $this->dbh->prepare($sql);
-		        $stmt->bindValue('email', $email);
-		        $stmt->bindValue('password', $password);
-		        $stmt->execute();
-
-		        $userDb = $stmt->fetch();
-
-		        if ($userDb) {
-		            return new User(
-		                $userDb['id_user'],
-		                $userDb['name'],
-		                $userDb['lastname'],
-		                $userDb['id_number'],
-		                $userDb['cel'],
-		                $userDb['email'],
-		                $userDb['pass'],
-		                $userDb['rol']
-		            );
-		        }
-		        return null;
-		    } catch (Exception $e) {
-		        die($e->getMessage());
-		    }
+			try {
+				$sql = 'SELECT * FROM user WHERE email = :email AND pass = :password';
+				$stmt = $this->dbh->prepare($sql);
+				$stmt->bindValue('email', $email);
+				$stmt->bindValue('password', $password);
+				$stmt->execute();
+		
+				$userDb = $stmt->fetch(PDO::FETCH_ASSOC); // Obtener como array asociativo
+		
+				if ($userDb) {
+					// Asegúrate de que los campos coincidan con los nombres reales de la base de datos
+					return new User(
+						$userDb['id_user'],
+						$userDb['name_user'], // Asegúrate de que sea el campo correcto
+						$userDb['lastname'],
+						$userDb['id_number'],
+						$userDb['cel'],
+						$userDb['email'],
+						$userDb['pass'],
+						$userDb['rol']
+					);
+				}
+				return null;
+			} catch (Exception $e) {
+				die($e->getMessage());
+			}
 		}
+		
+
+
+
 
 
 

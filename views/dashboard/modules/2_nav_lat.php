@@ -7,7 +7,27 @@
 					<i class="far fa-times-circle show-nav-lateral"></i>
 					<img src="assets/plantilla/dashboard/assets/avatar/Avatar.png" class="img-fluid" alt="Avatar">
 					<figcaption class="roboto-medium text-center">
-						nombre <br><small class="roboto-condensed-light">rol</small>
+
+
+					<?php
+$roles = [
+    1 => 'Super Admin',
+    2 => 'Admin',
+    3 => 'Seller',
+    4 => 'User'
+];
+$roleName = $roles[$_SESSION['user']['role']] ?? 'Unknown Role';
+?>
+
+<!-- Mostrar el nombre completo y el rol -->
+<?php echo $_SESSION['user']['name'] . ' ' . $_SESSION['user']['lastname']; ?> 
+<br>
+<small class="roboto-condensed-light">
+    <?php echo $roleName; ?>
+</small>
+
+
+
 					</figcaption>
 				</figure>
 				<div class="full-box nav-lateral-bar"></div>

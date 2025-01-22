@@ -7,6 +7,7 @@
   <title>Landing Page</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://kit.fontawesome.com/7380e2e883.js" crossorigin="anonymous"></script>
+  <link rel="icon" href="/ruta/a/tu/favicon.png" type="image/png">
   <style>
     /* Navbar */
     .navbar {

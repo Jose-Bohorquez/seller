@@ -29,17 +29,28 @@
             }
         } 
 
+
+
+
+
         public function read_rol() {
             $roles = new Rol;
-            $roles = $roles -> rol_read();
-            #var_dump($roles); 
+            $roles = $roles->rol_read();
+            // var_dump($roles); //test
+            print_r($roles);
+            
             require_once "views/dashboard/modules/1_header.php";
             require_once "views/dashboard/modules/2_nav_lat.php";
             require_once "views/dashboard/modules/3_nav_sup.php";
             require_once "views/dashboard/pages/read_roles.php";
             require_once "views/dashboard/modules/footer.php";
-
         }
+
+
+
+        
+
+        
 
         
 public function update_rol() {

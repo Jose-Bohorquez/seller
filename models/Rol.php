@@ -34,11 +34,11 @@
 
 
         # constructor para 2 parametros (__construct2)
-        public function __construct2($id_rol,$name_rol)
-        {
-        	$this -> id_rol = $id_rol;
-        	$this -> name_rol 	= $name_rol;
-        }
+		public function __construct2($id_rol, $name_rol) {
+			$this->id_rol = $id_rol;
+			$this->name_rol = $name_rol;
+		}
+		
 
 
 		# Metodos set() y get() id_rol
@@ -84,26 +84,44 @@
 
 
 
-		# caso de uso # 02 leer todos los usuarios
-public function rol_read()
-{
-	#echo "estas en la funcion leer roles de el modelo rol que se llama desde el controlador de usuarios";
-    try {
-        $rolList = [];
-        $sql = 'SELECT * FROM rol'; // Asegúrate de que sea 'rol'
-        $stmt = $this->dbh->query($sql);
-        foreach ($stmt->fetchAll() as $rol) {
-            $rolList[] = new Rol(
-                $rol['id_rol'],
-                $rol['name_rol']
-            );
-        }
-        return $rolList;
-    } catch (Exception $e) {
-        die("Error al obtener roles: " . $e->getMessage());
-    }
-}
 
+		public function rol_read()
+		{
+			try {
+				$rolList = [];
+				$sql = 'SELECT * FROM rol'; // Asegúrate de que sea 'rol'
+				$stmt = $this->dbh->query($sql);
+				foreach ($stmt->fetchAll() as $rol) {
+					$rolList[] = new Rol(
+						$rol['id_rol'],
+						$rol['name']
+					);
+				}
+				return $rolList;
+			} catch (Exception $e) {
+				die("Error al obtener roles: " . $e->getMessage());
+			}
+		}		
+
+		// public function rol_read() {
+		// 	try {
+		// 		$sql = 'SELECT * FROM rol';
+		// 		$stmt = $this->dbh->query($sql);
+		// 		$roles = [];
+		// 		foreach ($stmt->fetchAll() as $rol) {
+		// 			$roles[$rol['id_rol']] = $rol['name_rol'];
+		// 		}
+		// 		return $roles;
+		// 	} catch (Exception $e) {
+		// 		die("Error al obtener roles: " . $e->getMessage());
+		// 	}
+		// }
+		
+		
+		
+		
+		
+		
 
 
 public function get_rol_by_id($id_rol)
