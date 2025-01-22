@@ -19,23 +19,75 @@ try {
     $controllerName = isset($_REQUEST['c']) ? ucfirst(strtolower($_REQUEST['c'])) : $defaultController;
     $actionName = isset($_REQUEST['a']) ? $_REQUEST['a'] : $defaultAction;
 
-    // Rutas protegidas (solo accesibles para usuarios autenticados)
-    $protectedRoutes = [
-        'Dashboard' => [], // Todas las acciones protegidas
-        'Users' => ['create_user', 'read_user', 'update_user', 'delete_user'], // Acciones protegidas
-        'Products' => [] // Todas las acciones protegidas
+    // Rutas públicas (accesibles sin autenticación)
+    $publicRoutes = [
+        'Users' => ['register', 'store', 'create_user_register'], // Acciones públicas del controlador Users
+        'Landing' => [], // Todas las acciones de Landing son públicas
+        'Login' => [], // Todas las acciones de Login son públicas
     ];
 
-    // Verificar si la ruta es protegida
-    if (array_key_exists($controllerName, $protectedRoutes)) {
-        $protectedActions = $protectedRoutes[$controllerName];
+    // Rutas protegidas (requieren autenticación y roles específicos)
+    $protectedRoutes = [
+        'Dashboard' => ['roles' => [1, 2]], // Super-admin y Admin
+        'Users' => [
+            'roles' => [1, 2], // Super-admin y Admin
+            'actions' => [
+                'create_user' => [1, 2], // Solo Admin y Super-admin pueden crear usuarios
+                'read_user' => [1, 2], // Super-admin y Admin pueden leer usuarios
+                'update_user' => [1], // Solo Super-admin puede actualizar usuarios
+                'delete_user' => [1], // Solo Super-admin puede eliminar usuarios
+                'perfil' => [4], // Solo los usuarios normales pueden ver su perfil
+            ],
+        ],
+        'Products' => [
+            'roles' => [1, 2, 3], // Super-admin, Admin, y Seller
+            'actions' => [
+                'create_product' => [1, 2, 3], // Todos los roles indicados pueden crear productos
+                'edit_product' => [1, 2, 3], // Todos los roles indicados pueden editar productos
+                'delete_product' => [1, 2], // Solo Super-admin y Admin pueden eliminar productos
+            ],
+        ],
+    ];
 
-        // Si no hay acciones específicas protegidas, proteger todas las acciones
-        if (empty($protectedActions) || in_array($actionName, $protectedActions)) {
+    // Verificar si la ruta es pública
+    if (!array_key_exists($controllerName, $publicRoutes) || 
+        (!empty($publicRoutes[$controllerName]) && !in_array($actionName, $publicRoutes[$controllerName]))) {
+
+        // Validar rutas protegidas
+        if (array_key_exists($controllerName, $protectedRoutes)) {
+            $controllerConfig = $protectedRoutes[$controllerName];
+            $allowedRoles = $controllerConfig['roles'] ?? []; // Roles permitidos para el controlador
+            $protectedActions = $controllerConfig['actions'] ?? []; // Acciones protegidas dentro del controlador
+
+            // Verificar si el usuario está autenticado
             if (!is_logged_in()) {
                 header("Location: ?c=Login"); // Redirigir al login si no está autenticado
                 exit();
             }
+
+            // Validar si el rol del usuario puede acceder al controlador
+            if (!empty($allowedRoles) && !in_array($_SESSION['user']['role'], $allowedRoles)) {
+                echo "<h1>Acceso denegado</h1>";
+                echo "<p>No tienes permisos para acceder a este controlador.</p>";
+                echo "<p><a href='?c=Landing&a=main'>Volver al inicio</a></p>";
+                exit();
+            }
+
+            // Validar si la acción está protegida
+            if (!empty($protectedActions) && array_key_exists($actionName, $protectedActions)) {
+                $actionRoles = $protectedActions[$actionName];
+                if (!in_array($_SESSION['user']['role'], $actionRoles)) {
+                    echo "<h1>Acceso denegado</h1>";
+                    echo "<p>No tienes permisos para realizar esta acción.</p>";
+                    echo "<p><a href='?c=Landing&a=main'>Volver al inicio</a></p>";
+                    exit();
+                }
+            }
+        } else {
+            echo "<h1>Acceso denegado</h1>";
+            echo "<p>No tienes permisos para acceder a este controlador.</p>";
+            echo "<p><a href='?c=Landing&a=main'>Volver al inicio</a></p>";
+            exit();
         }
     }
 
