@@ -60,8 +60,17 @@ class Landing
 
     public function mainv2()
     {
-        require_once "views/landing/new_view.php"; // Aquí es donde cargamos la nueva vista
+        // Importa el modelo de productos
+        require_once "models/Product.php";
+    
+        // Instancia del modelo y obtiene los productos
+        $productModel = new Product();
+        $products = $productModel->products_read();
+    
+        // Pasa los productos a la vista
+        require_once "views/landing/new_view.php";
     }
+    
     
 
 
