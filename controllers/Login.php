@@ -28,7 +28,7 @@ class Login
                     1 => "?c=Dashboard&a=main", // Super Admin
                     2 => "?c=Dashboard&a=main", // Admin
                     3 => "?c=Sellerv&a=dashboard", // Seller
-                    4 => "?c=Userv&a=profile", // User
+                    4 => "?c=Landing&a=main&m=loginOk", // User
                 ];
 
                 $redirect = $rolesRedirects[$authenticatedUser->get_rol()] ?? "?c=Login&a=main";

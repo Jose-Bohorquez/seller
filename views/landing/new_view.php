@@ -82,6 +82,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="container-fluid">
     <!-- Navbar -->
@@ -104,6 +105,7 @@
                 <li><a class="dropdown-item" href="#">Celulares</a></li>
                 <li><a class="dropdown-item" href="#">Computadores</a></li>
                 <li><a class="dropdown-item" href="#">Equipos Usados</a></li>
+                <li><a class="dropdown-item" href="#">(En Desarrollo)</a></li>
               </ul>
             </li>
             <li class="nav-item">
@@ -116,76 +118,76 @@
               <i class="fa-solid fa-magnifying-glass"></i>
             </span>
           </div>
-          <div class="d-flex align-items-center ms-4">
-            <a href="?c=Login&a=main" class="btn btn-session text-white me-2">Iniciar Sesión</a>
-            <a href="?c=Registry" class="btn btn-register bg-white">Registrarse</a>
-            <a href="#" class="text-white ms-3 fs-4"><i class="fa-solid fa-cart-shopping"></i></a>
-          </div>
+
+
+          <?php
+session_start();
+
+// Verificar si la sesión está activa
+if (isset($_SESSION['user'])) {
+    // Usuario autenticado: Mostrar botones de "Cerrar Sesión" y "Perfil"
+    ?>
+    <div class="d-flex align-items-center ms-4">
+        <a href="?c=Userv&a=profile" class="btn btn-light me-2 text-nowrap px-3">Mi Perfil</a>
+        <a href="?c=Log_out&a=main" class="btn btn-danger px-3 text-nowrap">Cerrar Sesión</a>
+        <a href="#" class="text-white ms-3 fs-4"><i class="fa-solid fa-cart-shopping"></i></a>
+    </div>
+    <?php
+} else {
+    // Usuario no autenticado: Mostrar botones de "Iniciar Sesión" y "Registrarse"
+    ?>
+    <div class="d-flex align-items-center ms-4">
+        <a href="?c=Login&a=main" class="btn btn-session text-white me-2 text-nowrap px-3">Iniciar Sesión</a>
+        <a href="?c=Registry" class="btn btn-register bg-white px-3">Registrarse</a>
+        <a href="#" class="text-white ms-3 fs-4"><i class="fa-solid fa-cart-shopping"></i></a>
+    </div>
+    <?php
+}
+?>
+
+
+
+
         </div>
       </div>
     </nav>
     <br>
+
     <!-- Carousel Section -->
-    <div id="promoCarousel" class="carousel slide" data-bs-ride="carousel">
-      <div class="carousel-inner" style="width: 1300px; height: 480px; margin: auto; overflow: hidden; border-radius: 8px;">
-      <div class="carousel-item active">
-          <a href="#">
-            <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
-              <img src="assets/imagenes/landing/new/dog.png" class="rounded-3"
-                style="max-width: 1300px; max-height: 480px; width: auto; height: auto;" alt="Promo 1">
-            </div>
-          </a>
-        </div>  
-        <div class="carousel-item">
-          <a href="#">
-            <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
-              <img src="assets/imagenes/landing/new/rc.png" class="rounded-3"
-                style="max-width: 1300px; max-height: 480px; width: auto; height: auto;" alt="Promo 1">
-            </div>
-          </a>
+    <div id="carouselExampleAutoplaying" class="carousel slide d-flex justify-content-center" data-bs-ride="carousel">
+      <div class="carousel-inner text-center">
+        <div class="carousel-item active" data-bs-interval="40000">
+          <img src="assets/imagenes/landing/new/baner_botas.png" class="d-block w-100 rounded-3" alt="Imagen 1">
         </div>
-        <div class="carousel-item">
-          <a href="#">
-            <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
-              <img src="assets/imagenes/landing/new/mascotas.webp" class="rounded-3"
-                style="max-width: 1300px; max-height: 480px; width: auto; height: auto;" alt="Promo 2">
-            </div>
-          </a>
+        <div class="carousel-item" data-bs-interval="40000">
+          <img src="assets/imagenes/landing/new/baner_rc.png" class="d-block w-100 rounded-3" alt="Imagen 2">
         </div>
-        <div class="carousel-item">
-          <a href="#">
-            <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
-              <img src="assets/imagenes/landing/new/s1-1.png" class="rounded-3"
-                style="max-width: 1300px; max-height: 480px; width: auto; height: auto;" alt="Promo 3">
-            </div>
-          </a>
+        <!-- <div class="carousel-item" data-bs-interval="40000">
+          <img src="assets/imagenes/landing/new/mascotas.webp" class="d-block w-100 rounded-3" alt="Imagen 3">
         </div>
-        <div class="carousel-item">
-          <a href="#">
-            <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
-              <img src="assets/imagenes/landing/new/s1-2.png" class="rounded-3"
-                style="max-width: 1300px; max-height: 480px; width: auto; height: auto;" alt="Promo 4">
-            </div>
-          </a>
+        <div class="carousel-item" data-bs-interval="40000">
+          <img src="assets/imagenes/landing/new/rc.webp" class="d-block w-100 rounded-3" alt="Imagen 3">
         </div>
-        <div class="carousel-item">
-          <a href="#">
-            <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
-              <img src="assets/imagenes/landing/new/rc.webp" class="rounded-3"
-                style="max-width: 1300px; max-height: 480px; width: auto; height: auto;" alt="Promo 5">
-            </div>
-          </a>
+        <div class="carousel-item" data-bs-interval="40000">
+          <img src="assets/imagenes/landing/new/s1-1.png" class="d-block w-100 rounded-3" alt="Imagen 3">
         </div>
+        <div class="carousel-item" data-bs-interval="40000">
+          <img src="assets/imagenes/landing/new/s1-2.png" class="d-block w-100 rounded-3" alt="Imagen 3">
+        </div> -->
       </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#promoCarousel" data-bs-slide="prev">
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying"
+        data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
+        <span class="visually-hidden">Anterior</span>
       </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#promoCarousel" data-bs-slide="next">
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying"
+        data-bs-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
+        <span class="visually-hidden">Siguiente</span>
       </button>
     </div>
+
+
     <!-- Promo Section -->
     <div class="container my-3 promo-section">
       <div class="row g-0">
@@ -269,5 +271,37 @@
   </div>
   <br>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+<!-- Incluye la librería de SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  // Función para obtener parámetros de la URL
+  function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+  }
+
+  // Detectar si 'm=loginOk' está presente en la URL
+  if (getQueryParam('m') === 'loginOk') {
+    // Mostrar SweetAlert2
+    Swal.fire({
+      title: '¡Ingreso Éxitoso!',
+      text: 'ya puedes comprar.',
+      icon: 'success',
+      timer: 3000, // 3 segundos
+      timerProgressBar: true,
+      showCloseButton: true, // Habilitar botón de cerrar (X)
+      showConfirmButton: false, // Ocultar botón de confirmación
+      closeButtonHtml: '&times;', // Personalizar el botón de cerrar
+    });
+  }
+</script>
+
+
+
 </body>
+
 </html>

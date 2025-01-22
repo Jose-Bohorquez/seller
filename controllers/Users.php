@@ -182,7 +182,7 @@
             // Obtener los datos del usuario
             $userModel = new User();
             $user = $userModel->get_user_by_id($_GET['id_user']);
-            print_r($user);
+            #print_r($user);
             // Obtener los roles
             require_once "models/Rol.php";
             $rolModel = new Rol();

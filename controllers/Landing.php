@@ -2,7 +2,7 @@
 
 class Landing
 {
-    public function main()
+    public function mainv2()
     {
         require_once "models/Product.php";        
         $product = new Product;
@@ -58,7 +58,7 @@ class Landing
 
 
 
-    public function mainv2()
+    public function main()
     {
         // Importa el modelo de productos
         require_once "models/Product.php";
