@@ -173,32 +173,36 @@
 
 
 
-		public function get_product_by_id($id)
-		{
-		    try {
-		        $sql = 'SELECT * FROM products WHERE id = :id';
-		        $stmt = $this->dbh->prepare($sql);
-		        $stmt->bindValue('id', $id);
-		        $stmt->execute();
-		        $productDb = $stmt->fetch();
-
-		        
-		        $product = new Product(
-		            $productDb['id'],
-		            $productDb['name'],
-		            $productDb['description'],
-		            $productDb['technical_description'],
-		            $productDb['price'],
-		            $productDb['amount'],
-		            $productDb['category'],
-		            $productDb['image']
-		        );
-
-		        return $product;
-		    } catch (Exception $e) {
-		        die($e->getMessage());
-		    }
+		public function get_product_by_id($id) {
+			try {
+				$sql = 'SELECT * FROM products WHERE id = :id';
+				$stmt = $this->dbh->prepare($sql);
+				$stmt->bindValue('id', $id);
+				$stmt->execute();
+				$productDb = $stmt->fetch();
+		
+				if (!$productDb) {
+					return null;
+				}
+		
+				$product = new Product(
+					$productDb['id'],
+					$productDb['name'],
+					$productDb['description'],
+					$productDb['technical_description'],
+					$productDb['price'],
+					$productDb['amount'], // Asegúrate de que este campo es "amount" en la tabla
+					$productDb['category'],
+					$productDb['image']
+				);
+		
+				return $product;
+			} catch (Exception $e) {
+				error_log("Error en get_product_by_id: " . $e->getMessage());
+				return null;
+			}
 		}
+		
 
 
 

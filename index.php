@@ -5,6 +5,14 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 try {
+
+    // require_once "controllers/CartController.php";
+
+    // $controller = new CartController();
+    // $controller->addToCart();
+    // $controller->showCart();
+    // $controller->clearCart();
+
     // Cargar la conexión con la base de datos
     require_once "models/DataBase.php";
 

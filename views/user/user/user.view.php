@@ -93,28 +93,11 @@ if (isset($_SESSION['user'])) { // Verifica si existe la sesión
                 <nav class="full-box nav-lateral-menu">
                     <ul>
                         <li>
-                            <a href="?c=Userv&a=profile"><i class="fab fa-dashcube fa-fw"></i> &nbsp; Dashboard</a>
+                            <a href="?c=Userv&a=profile"><i class="fab fa-dashcube fa-fw"></i> &nbsp; Perfil</a>
                         </li>
-
                         <li>
-                            <a href="#" class="nav-btn-submenu"><i class="fas fa-user-tag fa-fw"></i> &nbsp; Perfil <i
-                                    class="fas fa-chevron-down"></i></a>
-                            <ul>
-                                <!-- <li>
-                                    <a href="#"><i class="fas fa-plus fa-fw"></i> &nbsp; Crear
-                                        Perfil</a>
-                                </li> -->
-                                <li>
-                                    <a href="#"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp;
-                                        Mis Compras</a>
-                                </li>
-                            </ul>
+                            <a href="?c=Userv&a=profile"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; Mis Compras</a>
                         </li>
-
-
-
- 
-
                     </ul>
                 </nav>
             </div>

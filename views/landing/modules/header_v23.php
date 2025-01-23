@@ -90,7 +90,6 @@ if (!function_exists('obtenerProductosCarrito')) {
               data-bs-target="#modalCarrito"></i>
             <div id="total-carrito" class="ms-2 fs-5">$0.00</div>
           </li>
-
         </ul>
       </div>
     </div>
