@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -82,10 +81,7 @@
     }
   </style>
 </head>
-
 <body>
-
-
   <?php
 // Función para obtener el total del carrito
 if (!function_exists('obtenerTotalCarrito')) {
@@ -99,7 +95,6 @@ if (!function_exists('obtenerTotalCarrito')) {
         return $total;
     }
 }
-
 // Función para obtener los productos en el carrito
 if (!function_exists('obtenerProductosCarrito')) {
     function obtenerProductosCarrito() {
@@ -107,10 +102,6 @@ if (!function_exists('obtenerProductosCarrito')) {
     }
 }
 ?>
-
-
-
-
   <div class="container-fluid">
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light" style="border-radius: 0 0 8px 8px ;">
@@ -145,11 +136,8 @@ if (!function_exists('obtenerProductosCarrito')) {
               <i class="fa-solid fa-magnifying-glass"></i>
             </span>
           </div>
-
-
           <?php
 session_start();
-
 // Verificar si la sesión está activa
 if (isset($_SESSION['user'])) {
     // Usuario autenticado: Mostrar botones de "Cerrar Sesión" y "Perfil"
@@ -159,7 +147,6 @@ if (isset($_SESSION['user'])) {
             <a href="?c=Log_out&a=main" class="btn btn-danger px-3 text-nowrap">Cerrar Sesión</a>
             <!-- <a href="#" class="text-white ms-3 fs-4"><i class="fa-solid fa-cart-shopping"></i></a> -->
           </div>
-
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             <!-- Icono del carrito con contador -->
             <li class="nav-item d-flex align-items-center">
@@ -174,9 +161,6 @@ if (isset($_SESSION['user'])) {
               </button>
             </li>
           </ul>
-
-
-
           <?php
 } else {
     // Usuario no autenticado: Mostrar botones de "Iniciar Sesión" y "Registrarse"
@@ -200,24 +184,12 @@ if (isset($_SESSION['user'])) {
               </button>
             </li>
           </ul>
-
-
-
           <?php
 }
 ?>
-
-
-
-
         </div>
       </div>
     </nav>
-
-
-
-
-
     <!-- Modal del carrito -->
     <!-- Modal del carrito -->
     <div class="modal fade" id="modalCarrito" tabindex="-1" aria-labelledby="modalCarritoLabel" aria-hidden="true">
@@ -248,7 +220,6 @@ if (isset($_SESSION['user'])) {
             </div>
           </div>
           <div class="modal-footer d-flex justify-content-between">
-
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             <button type="button" class="btn btn-danger" id="vaciar-carrito">Vaciar carrito</button>
             <button type="button" class="btn btn-success" id="pagar-carrito">Pagar</button>
@@ -257,11 +228,9 @@ if (isset($_SESSION['user'])) {
         </div>
       </div>
     </div>
-
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         const modalCarrito = document.querySelector("#modalCarrito");
-
         modalCarrito.addEventListener("show.bs.modal", function () {
           fetch("?c=CartController&a=showCart")
             .then(response => response.json())
@@ -287,7 +256,6 @@ if (isset($_SESSION['user'])) {
               totalCarrito.textContent = total.toFixed(2);
             });
         });
-
         document.querySelector("#vaciar-carrito").addEventListener("click", function () {
           fetch("?c=CartController&a=clearCart", {
               method: "POST"
@@ -302,18 +270,9 @@ if (isset($_SESSION['user'])) {
         });
       });
     </script>
-
-
-
-
-
-
-
-
     <?php
 #session_start();
 //agregar al carrito
-
 if (isset($_POST['id'])) {
     $productId = $_POST['id'];
 
@@ -345,11 +304,7 @@ if (isset($_POST['id'])) {
     echo "Producto agregado al carrito!";
 }
 ?>
-
-
-
     <br>
-
     <!-- Carousel Section -->
     <div id="carouselExampleAutoplaying" class="carousel slide d-flex justify-content-center" data-bs-ride="carousel">
       <div class="carousel-inner text-center">
@@ -383,8 +338,6 @@ if (isset($_POST['id'])) {
         <span class="visually-hidden">Siguiente</span>
       </button>
     </div>
-
-
     <!-- Promo Section -->
     <div class="container my-3 promo-section">
       <div class="row g-0">
@@ -450,7 +403,6 @@ if (isset($_POST['id'])) {
 
               <button class="btn btn-primary agregar-al-carrito" data-id="<?= $product->get_id(); ?>">Añadir al
                 carrito</button>
-
             </div>
           </div>
         </div>
@@ -461,13 +413,11 @@ if (isset($_POST['id'])) {
       </div>
     </div>
   </div>
-
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       const loadMoreButton = document.getElementById("loadMore");
       const productCards = document.querySelectorAll(".product-card");
       let visibleCards = 4;
-
       if (loadMoreButton) {
         loadMoreButton.addEventListener("click", function () {
           const totalCards = productCards.length;
@@ -476,9 +426,7 @@ if (isset($_POST['id'])) {
           for (let i = visibleCards; i < nextVisibleCards && i < totalCards; i++) {
             productCards[i].style.display = "block";
           }
-
           visibleCards = nextVisibleCards;
-
           // Ocultar el botón si se muestran todos los productos
           if (visibleCards >= totalCards) {
             loadMoreButton.style.display = "none";
@@ -487,9 +435,6 @@ if (isset($_POST['id'])) {
       }
     });
   </script>
-
-
-
   <div class="container ">
     <footer class="py-5">
       <div class="row text-center text-md-start">
@@ -551,10 +496,8 @@ if (isset($_POST['id'])) {
   </div>
   <br>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
   <!-- Incluye la librería de SweetAlert2 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
   <script>
     // Función para obtener parámetros de la URL
     function getQueryParam(param) {
@@ -577,9 +520,6 @@ if (isset($_POST['id'])) {
       });
     }
   </script>
-
   <script src="assets/js/carrito.js"></script>
-
 </body>
-
 </html>

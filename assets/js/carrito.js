@@ -1,9 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     const modalCarrito = document.querySelector('#modalCarrito');
     const vaciarCarritoBtn = document.querySelector('#vaciar-carrito');
-    const pagarCarritoBtn = document.querySelector('#pagar-carrito');
+    const pagarCarritoBtn = document.querySelector('#pagar-carrito'); // Botón Pagar del modal
     const totalCarritoNav = document.querySelector('#total-carrito'); // Total en el navbar
     const cartCount = document.querySelector('#cart-count'); // Contador de productos en el carrito
+    const cartItemsList = document.querySelector('#cart-items'); // Lista de productos en el checkout
+    const cartTotalCheckout = document.querySelector('#cart-total'); // Total en el checkout
 
     // Función para actualizar el contenido del carrito
     function actualizarCarrito() {
@@ -42,12 +44,32 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <td>$${subtotal.toFixed(2)}</td>
                             </tr>
                         `;
+
+                        // Si estamos en el checkout, actualizamos la lista
+                        if (cartItemsList) {
+                            cartItemsList.innerHTML += `
+                                <li class="list-group-item d-flex justify-content-between lh-sm">
+                                    <div>
+                                        <h6 class="my-0">${nombre}</h6>
+                                        <small class="text-muted">Cantidad: ${cantidad}</small>
+                                    </div>
+                                    <span class="text-muted">$${subtotal.toFixed(2)}</span>
+                                </li>`;
+                        }
                     }
                 } else {
                     contenidoCarrito.innerHTML = `
                         <tr>
                             <td colspan="4" class="text-center">No hay productos en el carrito.</td>
                         </tr>`;
+
+                    // Si estamos en el checkout
+                    if (cartItemsList) {
+                        cartItemsList.innerHTML = `
+                            <li class="list-group-item text-center">
+                                Tu carrito está vacío.
+                            </li>`;
+                    }
                 }
 
                 // Actualizar el total en el modal
@@ -64,6 +86,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (cartCount) {
                     cartCount.textContent = cantidadTotal > 0 ? cantidadTotal : '';
                     cartCount.style.display = cantidadTotal > 0 ? 'inline-block' : 'none';
+                }
+
+                // Actualizar el total en el checkout
+                if (cartTotalCheckout) {
+                    cartTotalCheckout.textContent = `$${total.toFixed(2)}`;
                 }
             })
             .catch(error => {
@@ -128,10 +155,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Función para pagar el carrito
+    // Función para redirigir al checkout al presionar "Pagar"
     if (pagarCarritoBtn) {
         pagarCarritoBtn.addEventListener('click', () => {
-            window.location.href = 'index.php?c=PaymentController&a=showPaymentPage';
+            window.location.href = 'index.php?c=Landing&a=checkout'; // Redirigir al checkout
         });
     }
 
