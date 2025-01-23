@@ -1,123 +1,145 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Capturar clic en los botones "Agregar al carrito"
+    const modalCarrito = document.querySelector('#modalCarrito');
+    const vaciarCarritoBtn = document.querySelector('#vaciar-carrito');
+    const pagarCarritoBtn = document.querySelector('#pagar-carrito');
+    const totalCarritoNav = document.querySelector('#total-carrito'); // Total en el navbar
+    const cartCount = document.querySelector('#cart-count'); // Contador de productos en el carrito
+
+    // Función para actualizar el contenido del carrito
+    function actualizarCarrito() {
+        fetch('index.php?c=CartController&a=showCart')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error en la respuesta del servidor');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const contenidoCarrito = document.querySelector('#contenido-carrito');
+                const totalCarritoModal = document.querySelector('#modal-total-carrito'); // Total en el modal
+                contenidoCarrito.innerHTML = '';
+                let total = 0;
+                let cantidadTotal = 0;
+
+                if (data.carrito && Object.keys(data.carrito).length > 0) {
+                    for (const id in data.carrito) {
+                        const producto = data.carrito[id];
+
+                        // Validar valores antes de usarlos
+                        const nombre = producto.nombre || 'Producto desconocido';
+                        const cantidad = parseInt(producto.cantidad) || 0;
+                        const precio = parseFloat(producto.precio) || 0;
+                        const subtotal = cantidad * precio;
+
+                        total += subtotal;
+                        cantidadTotal += cantidad;
+
+                        contenidoCarrito.innerHTML += `
+                            <tr>
+                                <td>${nombre}</td>
+                                <td>${cantidad}</td>
+                                <td>$${precio.toFixed(2)}</td>
+                                <td>$${subtotal.toFixed(2)}</td>
+                            </tr>
+                        `;
+                    }
+                } else {
+                    contenidoCarrito.innerHTML = `
+                        <tr>
+                            <td colspan="4" class="text-center">No hay productos en el carrito.</td>
+                        </tr>`;
+                }
+
+                // Actualizar el total en el modal
+                if (totalCarritoModal) {
+                    totalCarritoModal.textContent = `$${total.toFixed(2)}`;
+                }
+
+                // Actualizar el total en el navbar
+                if (totalCarritoNav) {
+                    totalCarritoNav.textContent = `$${total.toFixed(2)}`;
+                }
+
+                // Actualizar el contador de productos en el carrito
+                if (cartCount) {
+                    cartCount.textContent = cantidadTotal > 0 ? cantidadTotal : '';
+                    cartCount.style.display = cantidadTotal > 0 ? 'inline-block' : 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error al cargar el carrito:', error);
+                Swal.fire('Error', 'Hubo un problema al cargar el carrito. Inténtalo nuevamente.', 'error');
+            });
+    }
+
+    // Función para añadir productos al carrito
     document.querySelectorAll('.agregar-al-carrito').forEach(button => {
         button.addEventListener('click', () => {
             const productId = button.getAttribute('data-id');
-            const cantidad = 1; // Por defecto 1, puedes cambiar esto según tu lógica
 
-            fetch('index.php?c=Products&a=manage_cart', {
+            fetch('index.php?c=CartController&a=addToCart', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    action: 'add_to_cart',
-                    id: productId,
-                    cantidad: cantidad
-                })
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `id=${productId}&cantidad=1`
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Producto agregado al carrito');
-                    actualizarContenidoCarrito(data.carrito, data.total);
-                } else {
-                    alert(data.message || 'Error al agregar el producto al carrito.');
-                }
-            })
-            .catch(error => console.error('Error:', error));
-        });
-    });
-});
-
-
-
-function actualizarContenidoCarrito(carrito, total) {
-    const contenidoCarrito = document.getElementById('contenido-carrito');
-    const totalCarritoModal = document.getElementById('total-carrito-modal');
-    const totalCarritoNav = document.getElementById('total-carrito');
-
-    contenidoCarrito.innerHTML = '';
-
-    for (const id in carrito) {
-        const producto = carrito[id];
-        contenidoCarrito.innerHTML += `
-            <tr>
-                <td><img src="${producto.imagen}" alt="${producto.nombre}" style="width: 50px;"></td>
-                <td>${producto.nombre}</td>
-                <td>${producto.cantidad}</td>
-                <td>$${producto.precio}</td>
-                <td>$${(producto.precio * producto.cantidad).toFixed(2)}</td>
-                <td>
-                    <button class="btn btn-danger btn-sm eliminar-producto" data-id="${id}">Eliminar</button>
-                </td>
-            </tr>
-        `;
-    }
-
-    totalCarritoModal.textContent = `$${total.toFixed(2)}`;
-    totalCarritoNav.textContent = `$${total.toFixed(2)}`;
-
-    // Agregar eventos a los botones "Eliminar"
-    document.querySelectorAll('.eliminar-producto').forEach(button => {
-        button.addEventListener('click', () => {
-            const productId = button.getAttribute('data-id');
-            const confirmDelete = confirm('¿Seguro que deseas eliminar este producto del carrito?');
-
-            if (confirmDelete) {
-                fetch('index.php?c=Products&a=manage_cart', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        action: 'remove_one',
-                        id: productId
-                    })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error al añadir el producto al carrito');
+                    }
+                    return response.json();
                 })
-                .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        actualizarContenidoCarrito(data.carrito, data.total);
+                        Swal.fire('Producto Agregado', 'El producto fue añadido al carrito.', 'success');
+                        actualizarCarrito();
                     } else {
-                        alert('Error al eliminar el producto.');
+                        Swal.fire('Error', data.message || 'No se pudo añadir el producto.', 'error');
                     }
                 })
-                .catch(error => console.error('Error:', error));
-            }
+                .catch(error => {
+                    console.error('Error al agregar producto al carrito:', error);
+                    Swal.fire('Error', 'Hubo un problema al añadir el producto. Inténtalo nuevamente.', 'error');
+                });
         });
     });
 
-}
-
-
-
-
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    const vaciarCarritoBtn = document.getElementById('vaciar-carrito');
+    // Función para vaciar el carrito
     if (vaciarCarritoBtn) {
         vaciarCarritoBtn.addEventListener('click', () => {
-            fetch('index.php?c=Products&a=manage_cart', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    action: 'empty_cart'
+            fetch('index.php?c=CartController&a=clearCart', { method: 'POST' })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error al vaciar el carrito');
+                    }
+                    return response.json();
                 })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('El carrito ha sido vaciado.');
-                    actualizarContenidoCarrito(data.carrito, data.total);
-                } else {
-                    alert('Error al vaciar el carrito.');
-                }
-            })
-            .catch(error => console.error('Error:', error));
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire('Carrito Vacío', 'El carrito se ha vaciado correctamente.', 'success');
+                        actualizarCarrito();
+                    } else {
+                        Swal.fire('Error', 'No se pudo vaciar el carrito.', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al vaciar el carrito:', error);
+                    Swal.fire('Error', 'Hubo un problema al vaciar el carrito. Inténtalo nuevamente.', 'error');
+                });
         });
     }
+
+    // Función para pagar el carrito
+    if (pagarCarritoBtn) {
+        pagarCarritoBtn.addEventListener('click', () => {
+            window.location.href = 'index.php?c=PaymentController&a=showPaymentPage';
+        });
+    }
+
+    // Cargar contenido del carrito al abrir el modal
+    if (modalCarrito) {
+        modalCarrito.addEventListener('show.bs.modal', actualizarCarrito);
+    }
+
+    // Actualizar el carrito al cargar la página
+    actualizarCarrito();
 });

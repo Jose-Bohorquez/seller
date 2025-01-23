@@ -159,14 +159,24 @@ if (isset($_SESSION['user'])) {
             <a href="?c=Log_out&a=main" class="btn btn-danger px-3 text-nowrap">Cerrar Sesión</a>
             <!-- <a href="#" class="text-white ms-3 fs-4"><i class="fa-solid fa-cart-shopping"></i></a> -->
           </div>
+
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-            <!-- Icono del carrito -->
+            <!-- Icono del carrito con contador -->
             <li class="nav-item d-flex align-items-center">
-              <i class="fa-solid fa-cart-shopping fs-3 text-light" data-bs-toggle="modal"
-                data-bs-target="#modalCarrito"></i>
-              <div id="total-carrito" class="ms-2 fs-5">$0.00</div>
+              <button type="button" class="btn position-relative p-0 border-0" data-bs-toggle="modal"
+                data-bs-target="#modalCarrito" style="background-color: transparent;">
+                <i class="fa-solid fa-cart-shopping fs-3 text-white"></i> <!-- Agregado text-white para color blanco -->
+                <span id="cart-count"
+                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                  0
+                  <span class="visually-hidden">productos en el carrito</span>
+                </span>
+              </button>
             </li>
           </ul>
+
+
+
           <?php
 } else {
     // Usuario no autenticado: Mostrar botones de "Iniciar Sesión" y "Registrarse"
@@ -176,14 +186,23 @@ if (isset($_SESSION['user'])) {
             <a href="?c=Registry" class="btn btn-register bg-white px-3">Registrarse</a>
             <!-- <a href="#" class="text-white ms-3 fs-4"><i class="fa-solid fa-cart-shopping"></i></a> -->
           </div>
-          <ul class="navbar-nav ms-auto px-3 mx-2">
-            <!-- Icono del carrito -->
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <!-- Icono del carrito con contador -->
             <li class="nav-item d-flex align-items-center">
-              <i class="fa-solid fa-cart-shopping fs-3 text-white" data-bs-toggle="modal"
-                data-bs-target="#modalCarrito"></i>
-              <div id="total-carrito" class="ms-2 fs-5">$0.00</div>
+              <button type="button" class="btn position-relative p-0 border-0" data-bs-toggle="modal"
+                data-bs-target="#modalCarrito" style="background-color: transparent;">
+                <i class="fa-solid fa-cart-shopping fs-3 text-white"></i> <!-- Agregado text-white para color blanco -->
+                <span id="cart-count"
+                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                  0
+                  <span class="visually-hidden">productos en el carrito</span>
+                </span>
+              </button>
             </li>
           </ul>
+
+
+
           <?php
 }
 ?>
@@ -200,59 +219,62 @@ if (isset($_SESSION['user'])) {
 
 
     <!-- Modal del carrito -->
-<!-- Modal del carrito -->
-<div class="modal fade" id="modalCarrito" tabindex="-1" aria-labelledby="modalCarritoLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <!-- Modal del carrito -->
+    <div class="modal fade" id="modalCarrito" tabindex="-1" aria-labelledby="modalCarritoLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalCarritoLabel">Tu Carrito</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalCarritoLabel">Tu Carrito</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
+                    <th>Subtotal</th>
+                  </tr>
+                </thead>
+                <tbody id="contenido-carrito">
+                  <!-- Productos cargados dinámicamente -->
+                </tbody>
+              </table>
             </div>
-            <div class="modal-body">
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Producto</th>
-                                <th>Cantidad</th>
-                                <th>Precio</th>
-                                <th>Subtotal</th>
-                            </tr>
-                        </thead>
-                        <tbody id="contenido-carrito">
-                            <!-- Productos cargados dinámicamente -->
-                        </tbody>
-                    </table>
-                </div>
-                <div class="text-end">
-                    <h5>Total: $<span id="total-carrito">0.00</span></h5>
-                </div>
+            <div class="text-end">
+              <h5>Total:<span id="modal-total-carrito">0.00</span></h5>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-danger" id="vaciar-carrito">Vaciar carrito</button>
-            </div>
+          </div>
+          <div class="modal-footer d-flex justify-content-between">
+
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-danger" id="vaciar-carrito">Vaciar carrito</button>
+            <button type="button" class="btn btn-success" id="pagar-carrito">Pagar</button>
+          </div>
+
         </div>
+      </div>
     </div>
-</div>
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const modalCarrito = document.querySelector("#modalCarrito");
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const modalCarrito = document.querySelector("#modalCarrito");
 
-    modalCarrito.addEventListener("show.bs.modal", function () {
-        fetch("?c=CartController&a=showCart")
+        modalCarrito.addEventListener("show.bs.modal", function () {
+          fetch("?c=CartController&a=showCart")
             .then(response => response.json())
             .then(data => {
-                const tbody = document.querySelector("#contenido-carrito");
-                const totalCarrito = document.querySelector("#total-carrito");
-                tbody.innerHTML = "";
-                let total = 0;
+              const tbody = document.querySelector("#contenido-carrito");
+              const totalCarrito = document.querySelector("#total-carrito");
+              tbody.innerHTML = "";
+              let total = 0;
 
-                if (data.carrito) {
-                    for (let producto of Object.values(data.carrito)) {
-                        total += producto.subtotal;
-                        tbody.innerHTML += `
+              if (data.carrito) {
+                for (let producto of Object.values(data.carrito)) {
+                  total += producto.subtotal;
+                  tbody.innerHTML += `
                             <tr>
                                 <td>${producto.nombre}</td>
                                 <td>${producto.cantidad}</td>
@@ -260,24 +282,26 @@ document.addEventListener("DOMContentLoaded", function () {
                                 <td>$${producto.subtotal.toFixed(2)}</td>
                             </tr>
                         `;
-                    }
                 }
-                totalCarrito.textContent = total.toFixed(2);
+              }
+              totalCarrito.textContent = total.toFixed(2);
             });
-    });
+        });
 
-    document.querySelector("#vaciar-carrito").addEventListener("click", function () {
-        fetch("?c=CartController&a=clearCart", { method: "POST" })
+        document.querySelector("#vaciar-carrito").addEventListener("click", function () {
+          fetch("?c=CartController&a=clearCart", {
+              method: "POST"
+            })
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
-                    document.querySelector("#contenido-carrito").innerHTML = "";
-                    document.querySelector("#total-carrito").textContent = "0.00";
-                }
+              if (data.success) {
+                document.querySelector("#contenido-carrito").innerHTML = "";
+                document.querySelector("#total-carrito").textContent = "0.00";
+              }
             });
-    });
-});
-</script>
+        });
+      });
+    </script>
 
 
 
@@ -423,8 +447,9 @@ if (isset($_POST['id'])) {
               </p>
               <p class="text-primary fw-bold">$<?= number_format($product->get_price(), 2); ?></p>
               <!-- <a href="#" class="btn btn-primary btn-sm">Comprar</a> -->
-               
-              <button class="btn btn-primary w-100 agregar-al-carrito" data-id="<?= $product->get_id(); ?>">añadir al carrito</button>
+
+              <button class="btn btn-primary agregar-al-carrito" data-id="<?= $product->get_id(); ?>">Añadir al
+                carrito</button>
 
             </div>
           </div>
