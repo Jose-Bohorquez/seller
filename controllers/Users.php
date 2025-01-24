@@ -133,8 +133,9 @@
                     header("Location: ?c=Landing&m=registrationSuccess");
                 } catch (Exception $e) {
                     // Mostrar el error exacto (solo para depuración, no en producción)
-                    echo "Error al registrar el usuario: " . $e->getMessage();
-                    exit;
+                    // echo "Error al registrar el usuario: " . $e->getMessage();
+                    // exit;
+                    header("Location: ?c=Registry&m=regFail");
                 }
             }
         }

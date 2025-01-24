@@ -113,6 +113,8 @@
   </style>
 </head>
 
+
+
 <body class="registro-container">
   <div class="dropdown bd-mode-toggle">
     <button class="btn btn-sm btn-bd-primary-v2 py-2 dropdown-toggle d-flex align-items-center" id="bd-theme"
@@ -239,17 +241,42 @@
         <label>Ingrese su contraseña</label>
     </div>
 
+
     <?php if (isset($_GET['m'])): ?>
-    <div class="alert alert-<?php echo $_GET['m'] === 'registrationSuccess' ? 'success' : 'danger'; ?>">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
         <?php if ($_GET['m'] === 'missingFields'): ?>
-            <strong>Error:</strong> Por favor, completa todos los campos.
+            Swal.fire({
+                icon: 'error',
+                title: 'Error al registrar',
+                text: 'Por favor, completa todos los campos.',
+                confirmButtonText: 'Aceptar'
+            });
         <?php elseif ($_GET['m'] === 'registrationSuccess'): ?>
-            <strong>Éxito:</strong> Usuario registrado correctamente.
+            Swal.fire({
+                icon: 'success',
+                title: 'Registro exitoso',
+                text: 'Usuario registrado correctamente.',
+                confirmButtonText: 'Aceptar'
+            });
         <?php elseif ($_GET['m'] === 'error'): ?>
-            <strong>Error:</strong> Ocurrió un problema al registrar el usuario.
+            Swal.fire({
+                icon: 'error',
+                title: 'Error al registrar',
+                text: 'Ocurrió un problema al registrar el usuario.',
+                confirmButtonText: 'Aceptar'
+            });
+        <?php elseif ($_GET['m'] === 'regFail'): ?>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error al registrar',
+                text: 'El correo ya está en uso. Por favor, intenta con otro.',
+                confirmButtonText: 'Aceptar'
+            });
         <?php endif; ?>
-    </div>
+    </script>
 <?php endif; ?>
+
 
 
 
@@ -270,6 +297,7 @@
   </main>
   <br><br><br>
   <script src="assets/plantilla/bootstrap_5.3.3/assets/dist/js/bootstrap.bundle.min.js"></script>
+  
 </body>
 
 </html>
