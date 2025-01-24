@@ -90,7 +90,9 @@ class Landing
         $usuario = $_SESSION['user'] ?? [];
 
         // Cargar la vista del checkout
+        #require_once "views/landing/modulesv2/1_head.php";
         require_once "views/checkout/checkout.view.php";
+        #require_once "views/landing/modulesv2/7_footer.php";
     }
     
     
