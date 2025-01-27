@@ -13,36 +13,40 @@ class CartController {
     public function addToCart() {
         session_start();
         $productId = $_POST['id'] ?? null;
-        $quantity = $_POST['cantidad'] ?? 1;
-
+        $quantity = (int) ($_POST['cantidad'] ?? 1);
+    
+        // Validar que el ID del producto exista
         if (!$productId) {
             echo json_encode(['success' => false, 'message' => 'ID del producto no proporcionado']);
             return;
         }
-
+    
+        // Buscar el producto
         $product = $this->productModel->get_product_by_id($productId);
-
         if (!$product) {
             echo json_encode(['success' => false, 'message' => 'Producto no encontrado']);
             return;
         }
-
+    
+        // Validar cantidad disponible
         $stockDisponible = $product->get_amount();
         if ($stockDisponible < $quantity) {
             echo json_encode(['success' => false, 'message' => 'Inventario insuficiente']);
             return;
         }
-
-        // Descontar stock
-        $this->productModel->update_amount($productId, $stockDisponible - $quantity);
-
-        // Agregar al carrito
+    
+        // Actualizar inventario en la base de datos
+        $nuevoStock = $stockDisponible - $quantity;
+        $this->productModel->update_amount($productId, $nuevoStock);
+    
+        // Agregar producto al carrito en sesión
         if (!isset($_SESSION['carrito'])) {
             $_SESSION['carrito'] = [];
         }
-
+    
         if (isset($_SESSION['carrito'][$productId])) {
             $_SESSION['carrito'][$productId]['cantidad'] += $quantity;
+            $_SESSION['carrito'][$productId]['subtotal'] += $product->get_price() * $quantity;
         } else {
             $_SESSION['carrito'][$productId] = [
                 'id' => $productId,
@@ -53,9 +57,14 @@ class CartController {
                 'tiempo' => time()
             ];
         }
-
+    
+        // Respuesta de éxito
         echo json_encode(['success' => true, 'carrito' => $_SESSION['carrito']]);
     }
+    
+
+
+
 
     // Mostrar carrito
     public function showCart() {

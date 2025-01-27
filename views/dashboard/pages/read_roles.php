@@ -1,97 +1,65 @@
-<!-- SweetAlert2 CSS -->
-<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"> -->
-
-<!-- SweetAlert2 JS -->
-<!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
-
 <!-- Page header -->
 <div class="full-box page-header">
     <h3 class="text-left">
-        <i class="fab fa-dashcube fa-fw"></i> &nbsp; Listado de roles
+        <i class="fas fa-clipboard-list fa-fw"></i> &nbsp; LISTA DE USUARIOS
     </h3>
     <p class="text-justify">
-        Aquí podrás crear, editar, actualizar o eliminar los roles del sistema.
+        Vista dedicada a visualizar los usuarios actuales en el sistema
     </p>
 </div>
 
 <div class="container-fluid">
     <ul class="full-box list-unstyled page-nav-tabs">
         <li>
-            <a href="?c=Roles&a=create_rol"><i class="fas fa-plus fa-fw"></i> &nbsp; CREAR ROL</a>
+            <a href="?c=Users&a=create_user"><i class="fas fa-plus fa-fw"></i> &nbsp; AGREGAR USUARIO</a>
+        </li>
+        <li>
+            <a class="active" href="?c=Users&a=read_user"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; LISTA DE USUARIOS</a>
         </li>
     </ul>
 </div>
 
-
-
+<!-- Content here -->
 <div class="container-fluid">
     <div class="table-responsive">
-        <table class="table table-dark table-sm">
+        <table id="usersTable" class="table table-dark table-sm fs-6">
             <thead>
                 <tr class="text-center roboto-medium">
-                    <th>#</th>
-                    <th>NOMBRE</th>
-                    <th>EDITAR</th>
-                    <th>ELIMINAR</th>
+                    <th class="w-10">ID ROL</th>
+                    <th class="w-15">NOMBRE</th>
+                    <th class="w-10">ACTUALIZAR</th>
+                    <th class="w-10">ELIMINAR</th>
                 </tr>
             </thead>
+
+
             <tbody>
-<?php foreach ($roles as $rol ) : ?>
-    <tr>
-        <td><?php echo $rol -> get_id_rol(); ?></td>
-        <td><?php echo $rol -> get_name_rol(); ?></td>
-    </tr>
-<?php endforeach; ?>
-            </tbody>
+    <?php foreach ($roles as $rol): ?>
+        <?php if ($rol instanceof Rol): ?>
+            <tr class="text-center">
+                <td><?php echo $rol->get_id_rol(); ?></td>
+                <td><?php echo $rol->get_name_rol(); ?></td>
+                <td>
+                    <a href="?c=Roles&a=update_rol&id_rol=<?php echo $rol->get_id_rol(); ?>" class="btn btn-success btn-sm">
+                        <i class="fas fa-sync-alt"></i>
+                    </a>
+                </td>
+                <td>
+                    <a href="javascript:void(0);" class="btn btn-danger btn-sm" onclick="confirmDelete(<?php echo $rol->get_id_rol(); ?>)">
+                        <i class="far fa-trash-alt"></i>
+                    </a>
+                </td>
+            </tr>
+        <?php else: ?>
+            <tr>
+                <td colspan="4">Error: El elemento no es una instancia de la clase Rol.</td>
+            </tr>
+        <?php endif; ?>
+    <?php endforeach; ?>
+</tbody>
+
+
+
         </table>
     </div>
 </div>
-
-
-
-    <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-center">
-            <li class="page-item disabled">
-                <a class="page-link" href="#" tabindex="-1">Previous</a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-                <a class="page-link" href="#">Next</a>
-            </li>
-        </ul>
-    </nav>
-</div>
-
-
-
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const deleteButtons = document.querySelectorAll('.delete-btn');
-
-        deleteButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                const roleId = this.dataset.id;
-                const roleName = this.dataset.name;
-
-                Swal.fire({
-                    title: '¿Estás seguro?',
-                    text: `Vas a eliminar el rol "${roleName}". Esta acción no se puede deshacer.`,
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Sí, eliminar',
-                    cancelButtonText: 'Cancelar'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = `?c=Roles&a=delete_rol&id=${roleId}`;
-                    }
-                });
-            });
-        });
-    });
-</script>

@@ -103,6 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.agregar-al-carrito').forEach(button => {
         button.addEventListener('click', () => {
             const productId = button.getAttribute('data-id');
+            const disponiblesElement = button.parentElement.querySelector('.disponibles'); // Buscar el campo "Disponibles"
 
             fetch('index.php?c=CartController&a=addToCart', {
                 method: 'POST',
@@ -117,8 +118,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                 .then(data => {
                     if (data.success) {
-                        Swal.fire('Producto Agregado', 'El producto fue añadido al carrito.', 'success');
-                        actualizarCarrito();
+                        // Actualizar dinámicamente los disponibles
+                        if (disponiblesElement) {
+                            const disponibles = parseInt(disponiblesElement.textContent.split(': ')[1]); // Leer el número
+                            if (disponibles > 0) {
+                                disponiblesElement.textContent = `Disponibles: ${disponibles - 1}`;
+                            }
+                        }
+                        // Mostrar SweetAlert para notificar al usuario y recargar la página al cerrarlo
+                        Swal.fire({
+                            title: 'Producto Agregado',
+                            text: 'El producto fue añadido al carrito.',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location.href = 'index.php?c=Landing&a=main'; // Recargar a la vista deseada
+                        });
                     } else {
                         Swal.fire('Error', data.message || 'No se pudo añadir el producto.', 'error');
                     }
@@ -142,8 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                 .then(data => {
                     if (data.success) {
-                        Swal.fire('Carrito Vacío', 'El carrito se ha vaciado correctamente.', 'success');
-                        actualizarCarrito();
+                        location.reload();
                     } else {
                         Swal.fire('Error', 'No se pudo vaciar el carrito.', 'error');
                     }
